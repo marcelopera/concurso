@@ -16,12 +16,14 @@ import profiles
 import question_links
 import roadmap
 from estudo.errors import DomainError
-from estudo.services import sessions
+from estudo.services import catalog, sessions
 
 ROUTES = (
     ("GET", re.compile("/api/health"), "get_health"),
     ("GET", re.compile("/api/bootstrap"), "get_bootstrap"),
     ("GET", re.compile("/api/catalog"), "get_catalog"),
+    ("GET", re.compile("/api/exams"), "get_exams"),
+    ("GET", re.compile("/api/exams/questions"), "get_exam_questions"),
     ("GET", re.compile("/api/library"), "get_library"),
     ("GET", re.compile("/api/library/file"), "get_library_file"),
     ("GET", re.compile("/api/cards/due"), "get_cards_due"),
@@ -203,6 +205,16 @@ class Handler(BaseHTTPRequestHandler):
         eligible_only = (params.get("eligible_only", ["1"])[0] or "1").lower() not in ("0", "false", "no")
         page = max(1, min(100000, int(params.get("page", ["1"])[0])))
         return self._json(self.app.question_page(search, bank, discipline, page, eligible_only))
+
+    def get_exams(self, params, match, body):
+        return self._json({"items": catalog.exams(self.app)})
+
+    def get_exam_questions(self, params, match, body):
+        exam_id = (params.get("id", [""])[0] or "").strip()
+        questions = catalog.exam_questions(self.app, exam_id)
+        if questions is None:
+            return self._error("Prova não encontrada.", 404)
+        return self._json({"items": questions})
 
     def get_library(self, params, match, body):
         return self._json({"items": self.app.library_docs((params.get("search", [""])[0] or "").strip())})

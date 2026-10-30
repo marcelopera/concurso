@@ -97,3 +97,24 @@ test('plano externo pode omitir fontes, marcos e regras específicas de prova', 
   await page.getByText('Estratégia de prova, marcos e fontes oficiais', { exact: true }).click();
   expect(errors).toEqual([]);
 });
+
+test('prova completa guarda respostas e corrige apenas ao finalizar', async ({ page, request }) => {
+  const profile = await (await request.post('/api/profiles', { data: { name: 'Simulado' } })).json();
+  await page.addInitScript((id) => localStorage.setItem('study-profile', id), profile.id);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Provas completas' }).click();
+  await expect(page.getByRole('heading', { name: 'Provas completas' })).toBeVisible();
+  await page.getByRole('button', { name: 'Iniciar simulado' }).first().click();
+  await expect(page.getByText('Questão de demonstração 1:', { exact: false })).toBeVisible();
+  await page.locator('.option').first().click();
+  await expect(page.getByText('1 de 1 respondidas')).toBeVisible();
+  await expect(page.getByText('Gabarito:')).toHaveCount(0);
+  await page.reload();
+  await page.getByRole('button', { name: 'Provas completas' }).click();
+  await expect(page.locator('.option').first()).toHaveAttribute('aria-pressed', 'true');
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.getByRole('button', { name: 'Finalizar simulado' }).click();
+  await expect(page.getByText('Simulado concluído')).toBeVisible();
+  await expect(page.getByText('1 acertos', { exact: false })).toBeVisible();
+  await expect(page.getByText('Acertou · gabarito A')).toBeVisible();
+});

@@ -124,4 +124,4 @@ function CatalogBrowser({ mode, selectedIds = [], onToggle, onChoose, initialEli
   </section>;
 }
 
-export { QuestionCard, CatalogBrowser };
+export { QuestionCard, QuestionResult, CatalogBrowser };
