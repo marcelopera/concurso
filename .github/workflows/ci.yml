@@ -27,12 +27,13 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 11.25.0
-      - run: python -m pip install -e ".[dev]"
+      - run: python -m pip install -e ".[dev,extract]"
       - run: pnpm install --frozen-lockfile
         working-directory: sistema-estudo
       - run: python -m ruff check .
       - run: python -m ruff format --check .
       - run: python tools/check_repository.py
+      - run: python -m unittest discover -s tests/pipeline -v
       - run: pnpm run lint
         working-directory: sistema-estudo
       - run: pnpm test

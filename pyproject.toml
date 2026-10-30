@@ -7,13 +7,26 @@ dependencies = ["tzdata>=2025.1; sys_platform == 'win32'"]
 
 [project.optional-dependencies]
 dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1"]
+extract = ["pdfplumber>=0.11.0,<0.12", "pypdf>=6,<7", "jsonschema==4.26.0"]
+
+[project.scripts]
+concurso-pipeline = "concurso_pipeline.__main__:main"
 
 [build-system]
 requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = []
+packages = ["concurso_pipeline", "concurso_pipeline.common", "concurso_pipeline.extractors", "concurso_pipeline.stages", "concurso_pipeline.schemas", "concurso_pipeline.catalog"]
+
+[tool.setuptools.package-dir]
+"concurso_pipeline.schemas" = "docs/schemas"
+"concurso_pipeline.catalog" = "sistema-estudo/catalogo"
+
+[tool.setuptools.package-data]
+concurso_pipeline = ["templates/*.html"]
+"concurso_pipeline.schemas" = ["*.json"]
+"concurso_pipeline.catalog" = ["*.sql"]
 
 [tool.ruff]
 target-version = "py310"

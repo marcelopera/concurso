@@ -34,6 +34,8 @@ venv/
 /sistema-estudo/test-results/
 /sistema-estudo/playwright-report/
 /backup-estudo/
+/data/
+/build/
 
 # Imagens Docker exportadas e configuração local
 /*.tar

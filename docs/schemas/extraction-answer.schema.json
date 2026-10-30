@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Registro de gabarito — contrato v1",
+  "type": "object",
+  "required": ["documento_id", "concurso", "numero_original", "resposta_publicada", "situacao_item", "natureza_gabarito", "cargo_original", "paginas_pdf", "regioes_fonte"],
+  "properties": {
+    "documento_id": {"type": "string", "minLength": 1},
+    "concurso": {"type": "string", "minLength": 1},
+    "numero_original": {"type": "string", "minLength": 1},
+    "resposta_publicada": {"type": "string", "minLength": 1},
+    "situacao_item": {"type": "string", "minLength": 1},
+    "natureza_gabarito": {"enum": ["preliminar", "definitivo", "nao_identificado"]},
+    "cargo_original": {"type": "string"},
+    "paginas_pdf": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 1, "uniqueItems": true},
+    "regioes_fonte": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["pagina", "bbox"], "properties": {"pagina": {"type": "integer", "minimum": 1}, "bbox": {"type": "array", "items": {"type": "number", "minimum": 0}, "minItems": 4, "maxItems": 4}}}}
+  }
+}

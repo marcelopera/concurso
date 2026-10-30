@@ -2,6 +2,11 @@
 
 ## Não lançado
 
+- Pipeline versionado com CLI por execução, extratores por banca, normalização comum, JSONL canônico e revisão explícita.
+- Geração de SQLite, CSV, HTML e relatório a partir do canônico, contratos de questões/tópicos/gabaritos e testes sintéticos das seis bancas.
+- Importação verificável dos lotes históricos, preservação dos IDs de ocorrência e roteiro de limpeza do histórico após o merge.
+- Decisões sobre dados e escopo registradas; unificação da execução local com o Makefile.
+
 - Adaptador HTTP com tabela de rotas e erros centralizados; serviços de catálogo, aulas e sessões e conexões separados.
 - Validação estrutural do catálogo, JSON Schema de questões e manifestos privados com SHA-256.
 - Planos externos com validação, backup e importação transacional que preserva progresso.
