@@ -330,14 +330,14 @@ class Handler(BaseHTTPRequestHandler):
     def post_lessons_id_sessions(self, params, match, body):
         lesson_id = match.group(1)
         with self.app.study_db() as con:
+            con.execute("BEGIN IMMEDIATE")
             if con.execute("SELECT 1 FROM lessons WHERE lesson_id=?", (lesson_id,)).fetchone() is None:
                 return self._error("Aula não encontrada.", 404)
             active = con.execute(
-                "SELECT * FROM study_sessions WHERE status='active' ORDER BY updated_at DESC LIMIT 1"
+                "SELECT * FROM study_sessions WHERE status='active' AND lesson_id=? ORDER BY updated_at DESC LIMIT 1",
+                (lesson_id,),
             ).fetchone()
             if active:
-                if active["lesson_id"] != lesson_id:
-                    return self._error("Há outra sessão em andamento. Retome ou conclua essa sessão primeiro.", 409)
                 return self._json(self.app.session_public(active))
             session_id = self.app.new_id("session")
             now = self.app.utc_now()

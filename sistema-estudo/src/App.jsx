@@ -73,7 +73,7 @@ export default function App() {
     <main key={data?.profile.id} inert={profileBusy ? "" : undefined} className={screen.name === "session" ? "content session-content" : "content"}>
       {globalError && <Notice kind="error" onClose={() => setGlobalError("")}>{globalError}</Notice>}
       {loading && !data ? <div className="empty loading-state"><strong>Abrindo o espaço de estudo…</strong></div> : null}
-      {data && screen.name === "roadmap" && <Roadmap data={data} onOpenTopic={(subject, topic) => setScreen({ name: "topic", topicId: topic.id })} onResume={() => openSession(data.active_session)} onCreateTopic={createTopic} onOpenLesson={(lessonId) => setScreen({ name: "lesson", lessonId })} onStart={startSession} onRefresh={refresh} />}
+      {data && screen.name === "roadmap" && <Roadmap data={data} onOpenTopic={(subject, topic) => setScreen({ name: "topic", topicId: topic.id })} onResume={openSession} onCreateTopic={createTopic} onOpenLesson={(lessonId) => setScreen({ name: "lesson", lessonId })} onStart={startSession} onRefresh={refresh} />}
       {data && screen.name === "topic" && topicRoute && <TopicPage subject={topicRoute.subject} topic={topicRoute.topic} onBack={() => setScreen({ name: "roadmap" })} onOpenLesson={(lessonId) => setScreen({ name: "lesson", lessonId })} onCreateLesson={createLesson} onRefresh={refresh} />}
       {screen.name === "lesson" && <LessonEditor lessonId={screen.lessonId} onBack={() => { refresh().catch(() => {}); setScreen({ name: "topic", topicId: data?.subjects.flatMap((s) => s.topics).find((t) => t.lessons.some((l) => l.id === screen.lessonId))?.id || "" }); }} onStart={() => startSession(screen.lessonId)} onRefresh={refresh} theme={theme} />}
       {screen.name === "free" && <FreeQuestions />}
