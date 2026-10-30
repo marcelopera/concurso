@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 
 APP = Path(__file__).resolve().parents[1]
@@ -22,7 +23,7 @@ class MappingInstallationTests(unittest.TestCase):
             root = Path(temp)
             catalog, study = root / "conteudo.sqlite", root / "estudo.sqlite"
             criar(catalog)
-            with sqlite3.connect(catalog) as con:
+            with closing(sqlite3.connect(catalog)) as con, con:
                 con.execute("UPDATE schema_meta SET origem='teste privado'")
                 con.execute(
                     "UPDATE questoes SET enunciado_original='Calcule juros simples de uma aplicação.' WHERE questao_id IN ('q1', 'q2')"
@@ -59,7 +60,7 @@ class MappingInstallationTests(unittest.TestCase):
                 self.assertEqual(
                     json.loads((root / "vinculacao" / "relatorio.json").read_text())["linked_occurrences"], 2
                 )
-                with sqlite3.connect(catalog) as con:
+                with closing(sqlite3.connect(catalog)) as con, con:
                     con.execute(
                         "UPDATE questoes SET enunciado_original='Sem correspondência temática.' WHERE questao_id IN ('q1', 'q2')"
                     )
