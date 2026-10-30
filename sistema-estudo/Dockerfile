@@ -1,6 +1,6 @@
 FROM node:25-bookworm-slim@sha256:81db02c4b671288a03915da9534dbd54f96d0e7c24d80ccc54f5b36b2e684370 AS frontend
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@11.25.0 --activate
+RUN npm install --global pnpm@11.25.0
 COPY sistema-estudo/package.json sistema-estudo/pnpm-lock.yaml sistema-estudo/pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY sistema-estudo/index.html sistema-estudo/vite.config.js ./
