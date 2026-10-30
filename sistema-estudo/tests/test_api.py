@@ -116,6 +116,33 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.request(prefix + "/step", "POST", {"step": 100})[0], 400)
         self.assertEqual(self.request(prefix + "/step", "POST", {"step": True})[0], 400)
 
+    def test_multiple_lessons_keep_independent_pending_sessions(self):
+        first = self.start()
+        self.request(f"/api/sessions/{first}/state", "PUT", {"payload": {"recallText": "Primeira aula"}})
+        self.request(f"/api/sessions/{first}/step", "POST", {"step": 2})
+        status, lesson, _ = self.request("/api/lessons", "POST", {"topic_id": "topic", "title": "Outra aula"})
+        self.assertEqual(status, 201)
+        path = f"/api/lessons/{lesson['id']}/sessions"
+        status, second, _ = self.request(path, "POST", {})
+        self.assertEqual(status, 201)
+        self.assertNotEqual(first, second["session_id"])
+        self.request(f"/api/sessions/{second['session_id']}/state", "PUT", {"payload": {"recallText": "Segunda aula"}})
+
+        status, resumed, _ = self.request("/api/lessons/lesson/sessions", "POST", {})
+        self.assertEqual(status, 200)
+        self.assertEqual(resumed["session_id"], first)
+        self.assertEqual(resumed["current_step"], 2)
+        self.assertEqual(resumed["payload"]["recallText"], "Primeira aula")
+        _, bootstrap, _ = self.request("/api/bootstrap")
+        sessions = {item["session_id"]: item for item in bootstrap["active_sessions"]}
+        self.assertEqual(set(sessions), {first, second["session_id"]})
+        self.assertEqual(sessions[second["session_id"]]["payload"]["recallText"], "Segunda aula")
+
+        self.request(f"/api/sessions/{first}/complete", "POST", {})
+        _, bootstrap, _ = self.request("/api/bootstrap")
+        self.assertEqual([item["session_id"] for item in bootstrap["active_sessions"]], [second["session_id"]])
+        self.assertEqual(self.request(path, "POST", {})[1]["session_id"], second["session_id"])
+
     def test_completion_is_idempotent_and_reviews_follow_the_schedule(self):
         session = self.start()
         body = {"cards": [{"selected": True, "front": "Pergunta", "back": "Resposta"}], "difficulties": ["Dúvida"]}
