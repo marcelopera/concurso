@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dependencies = ["concurso-estudo==0.1.0", "concurso-pipeline==0.1.0"]
 
 [project.optional-dependencies]
-dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1", "setuptools>=77", "wheel>=0.45"]
+dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1", "coverage>=7.6,<8", "setuptools>=77", "wheel>=0.45"]
 extract = ["concurso-pipeline[extract]==0.1.0"]
 
 [build-system]

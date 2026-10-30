@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "occurrence_id": "o1",
+      "question_id": "q1",
+      "discipline": "Língua Portuguesa",
+      "text": "No trecho ficcional, o autor defende uma interpretação sobre a escolha da personagem. Qual argumento sustenta essa leitura?"
+    },
+    {
+      "occurrence_id": "o2",
+      "question_id": "q2",
+      "discipline": "Língua Portuguesa",
+      "text": "Em uma crônica ficcional, o autor chama a licitação de uma dança burocrática. Qual é o sentido figurado dessa expressão?"
+    },
+    {
+      "occurrence_id": "o3",
+      "question_id": "q3",
+      "discipline": "Língua inglesa",
+      "text": "According to the following statement, what does the underlined word mean?"
+    },
+    {
+      "occurrence_id": "o4",
+      "question_id": "q4",
+      "discipline": "Administração Pública",
+      "text": "Na contratação pública, a licitação regida pela Lei 14.133 deve assegurar critérios objetivos."
+    },
+    {
+      "occurrence_id": "o5",
+      "question_id": "q5",
+      "discipline": "Matemática Financeira",
+      "text": "Calcule o valor das prestações de um financiamento pelo sistema Price."
+    }
+  ],
+  "bulk_count": 110,
+  "bulk_text": "Leia o trecho ficcional {number}. O autor defende uma interpretação sobre a decisão da personagem. Qual argumento sustenta essa leitura?"
+}

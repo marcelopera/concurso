@@ -1,0 +1,12 @@
+[run]
+branch = True
+relative_files = True
+source =
+    packages/contracts/src/concurso_contracts
+    packages/pipeline/src/concurso_pipeline
+    packages/estudo/backend/src/estudo
+
+[report]
+fail_under = 54
+skip_empty = True
+precision = 1
