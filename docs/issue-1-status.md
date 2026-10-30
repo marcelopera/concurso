@@ -24,7 +24,7 @@ Evidência: [ADR 0002](adr/0002-public-code-private-data.md).
 
 O importador copia e verifica lotes sem modificar o arquivo histórico. Na execução privada de validação, o catálogo foi reconstruído com contratos e integridade válidos. A proveniência ausente é marcada `legacy-unrecorded`; modelo, versão, prompt e data desconhecidos não são inventados.
 
-Ainda pendentes para depois do merge: backup espelho e snapshot privado no destino escolhido, verificação dos manifestos das cópias, reescrita/force-push, redução medida num clone completo novo e remoção de e-mails pessoais antigos. O [roteiro](history-cleanup.md) e o planejador de caminhos estão incluídos. O e-mail de novos commits locais já foi configurado como noreply; `package.json` declara MIT e autor.
+Um espelho do remoto e um snapshot local do checkout foram criados e verificados em 30/10/2026; a evidência resumida está em [backup da issue #23](runs/issue-23-backup-evidence.md). A busca não localizou o acervo privado original, então lotes, correções, enriquecimentos, proveniência, PDFs e bancos de progresso continuam sem cópia comprovada. Antes de qualquer limpeza, ainda são necessários localizar e verificar essa fonte, fazer um backup atualizado pós-merge, executar a reescrita/force-push autorizado, medir a redução num clone completo novo e tratar e-mails pessoais antigos. O [roteiro](history-cleanup.md) e o planejador de caminhos estão incluídos. O e-mail de novos commits locais já foi configurado como noreply; `package.json` declara MIT e autor.
 
 A preservação local não equivale ao armazenamento externo durável originalmente pedido na issue. Essa diferença está registrada como decisão do proprietário. Recuperar a proveniência real dos lotes antigos continua pendente.
 
