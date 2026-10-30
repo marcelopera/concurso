@@ -38,6 +38,8 @@ jobs:
       - run: python -m unittest discover -s packages/pipeline/tests -v
       - run: pnpm run lint
         working-directory: packages/estudo/frontend
+      - run: pnpm run format:check
+        working-directory: packages/estudo/frontend
       - run: pnpm test
         working-directory: packages/estudo/frontend
       - run: pnpm run build
