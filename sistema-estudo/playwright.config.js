@@ -7,6 +7,9 @@ export default defineConfig({
     command: `${process.env.PYTHON || 'python'} scripts/servidor_e2e.py`,
     url: 'http://127.0.0.1:8877/api/health',
     reuseExistingServer: false,
-    timeout: 30000,
+    timeout: 120000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+    env: { PYTHONUNBUFFERED: '1' },
   },
 });
