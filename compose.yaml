@@ -1,0 +1,22 @@
+services:
+  estudo:
+    image: sistema-estudo:local
+    build:
+      context: .
+      dockerfile: sistema-estudo/Dockerfile
+    ports:
+      - "127.0.0.1:${ESTUDO_PORTA:-8765}:${ESTUDO_PORTA:-8765}"
+    environment:
+      ESTUDO_PORT: "${ESTUDO_PORTA:-8765}"
+    volumes:
+      - estudo-dados:/app/sistema-estudo/dados
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('ESTUDO_PORT', '8765') + '/api/health', timeout=5).close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  estudo-dados:

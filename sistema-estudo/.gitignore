@@ -1,0 +1,9 @@
+node_modules/
+dist/
+public/fonts/
+__pycache__/
+*.py[cod]
+dados/*.sqlite
+dados/*.sqlite-shm
+dados/*.sqlite-wal
+dados/servidor.pid

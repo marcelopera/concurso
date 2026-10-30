@@ -1,0 +1,21 @@
+{
+  "mapping_tests": 5,
+  "roadmap_tests": 4,
+  "study_database_integrity": "ok",
+  "content_database": "read_only_sha256_unchanged_in_test",
+  "preexisting_links_preserved": 4,
+  "source_review_cases": 46,
+  "financial_reference_regression": "passed: financial case texts are not Portuguese",
+  "obsolete_generated_links_sync": "passed: manual links and history preserved",
+  "browser_checks": [
+    "counts",
+    "gaps",
+    "evidence",
+    "large_collection",
+    "pagination",
+    "correctable_filter",
+    "financial_case_text_regression",
+    "mobile",
+    "no_page_errors"
+  ]
+}

@@ -1,0 +1,34 @@
+# Dependências, builds e caches locais
+**/node_modules/
+**/dist/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# O acervo e todos os PDFs permanecem somente no computador local.
+/biblioteca-concursos/
+*.[pP][dD][fF]
+
+# Dados privados e arquivos temporários do sistema de estudo
+/sistema-estudo/dados/*.sqlite
+/sistema-estudo/dados/*.sqlite-shm
+/sistema-estudo/dados/*.sqlite-wal
+/sistema-estudo/dados/estudo-perfis/
+/sistema-estudo/dados/servidor.pid
+/sistema-estudo/dados/servidor.*.log
+/sistema-estudo/public/fonts/
+/sistema-estudo/tests/profiles-ui-*/
+/sistema-estudo/tests/tmp*/
+/backup-estudo/
+
+# Imagens Docker exportadas e configuração local
+/*.tar
+.env
+.env.local
+.env.*.local
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db

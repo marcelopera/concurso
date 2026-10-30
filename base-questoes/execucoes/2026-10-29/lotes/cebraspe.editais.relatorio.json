@@ -1,0 +1,400 @@
+{
+  "grupo": "cebraspe_editais",
+  "metodo": "Cache local pdfplumber/pdfminer com bboxes; seleção de páginas e escopos por cabeçalhos impressos; separação de cabeçalhos temáticos e itens numerados por expressão regular. Nenhum tópico ou subnível é gerado por inferência sem marcador na fonte.",
+  "total_topicos": 2950,
+  "documentos": [
+    {
+      "documento_id": "doc_4f2325c64c19f2f616dc",
+      "concurso": "2024-MPO-APO",
+      "arquivo": "Cebraspe/2024-MPO-APO/editais/abertura-atualizada-retificacao-8.pdf",
+      "paginas_pdf": 59,
+      "paginas_conteudo_programatico": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "tipo_publicacao": "consolidado",
+      "cargos": [
+        [
+          "Cargo 1: Analista de Planejamento e Orçamento — Especialidade: Geral",
+          "Geral"
+        ],
+        [
+          "Cargo 2: Analista de Planejamento e Orçamento — Especialidade: Desenvolvimento Institucional",
+          "Desenvolvimento Institucional"
+        ],
+        [
+          "Cargo 3: Analista de Planejamento e Orçamento — Especialidade: Governança e Gestão de Projetos de TI",
+          "Governança e Gestão de Projetos de TI"
+        ],
+        [
+          "Cargo 4: Analista de Planejamento e Orçamento — Especialidade: Desenvolvimento de Sistemas Orçamentários",
+          "Desenvolvimento de Sistemas Orçamentários"
+        ],
+        [
+          "Cargo 5: Analista de Planejamento e Orçamento — Especialidade: Gestão de Infraestrutura de TI",
+          "Gestão de Infraestrutura de TI"
+        ],
+        [
+          "Cargo 6: Analista de Planejamento e Orçamento — Especialidade: Gestão de Dados Orçamentários",
+          "Gestão de Dados Orçamentários"
+        ],
+        [
+          "Cargo 7: Analista de Planejamento e Orçamento — Especialidade: Gestão de Contratos de TI",
+          "Gestão de Contratos de TI"
+        ],
+        [
+          "Cargo 8: Analista de Planejamento e Orçamento — Especialidade: Gestão da Segurança da Informação Orçamentária",
+          "Gestão da Segurança da Informação Orçamentária"
+        ]
+      ],
+      "blocos": {
+        "cabecalhos_disciplina": 36,
+        "topicos_numerados": 1313
+      },
+      "topicos_total": 777,
+      "ocorrencias_repetidas_mescladas": 572,
+      "topicos_numerados": 753,
+      "numeros_amostra_inicio": [
+        "1",
+        "2",
+        "1",
+        "2",
+        "1",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "2",
+        "2.1"
+      ],
+      "numeros_amostra_fim": [
+        "3.3.1",
+        "3.4",
+        "4",
+        "4.1",
+        "4.1.1",
+        "4.1.2",
+        "26",
+        "4.1.3",
+        "28",
+        "4.2",
+        "16",
+        "4.3"
+      ],
+      "lacunas": [],
+      "duplicacoes": [],
+      "duvidas": [],
+      "retificacoes_inline_na_fonte": [
+        {
+          "pagina": 45,
+          "texto_literal": "(Retificado por meio do Edital nº 2 – STDI/SOF/MPO, de 26 de março de 2024, disponível"
+        }
+      ],
+      "amostras_visuais_revisadas": [
+        38,
+        39
+      ],
+      "notas": "Cada item mantém texto e hierarquia impressos. Blocos comuns vinculados a todos os cargos; itens idênticos repetidos sob cargos distintos foram mesclados com escopos e páginas acumulados. Anotações inline de retificação foram preservadas no relatório, separadas do conteúdo programático. Estado consolidado conforme identificação documental do manifesto."
+    },
+    {
+      "documento_id": "doc_a2c66a6aedf12b6f5d56",
+      "concurso": "2022-SEPLAN-RR-APO",
+      "arquivo": "Cebraspe/2022-SEPLAN-RR-APO/editais/abertura.pdf",
+      "paginas_pdf": 34,
+      "paginas_conteudo_programatico": [
+        27,
+        28,
+        29,
+        30
+      ],
+      "tipo_publicacao": "abertura",
+      "cargos": [
+        [
+          "Cargo 1: Planejamento e Orçamento",
+          "Planejamento e Orçamento"
+        ],
+        [
+          "Cargo 2: Tecnologia da Informação",
+          "Tecnologia da Informação"
+        ]
+      ],
+      "blocos": {
+        "cabecalhos_disciplina": 15,
+        "topicos_numerados": 304
+      },
+      "topicos_total": 278,
+      "ocorrencias_repetidas_mescladas": 41,
+      "topicos_numerados": 265,
+      "numeros_amostra_inicio": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "4.1",
+        "4.2",
+        "5",
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5"
+      ],
+      "numeros_amostra_fim": [
+        "4",
+        "5",
+        "6",
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5",
+        "7",
+        "7.1",
+        "8",
+        "9"
+      ],
+      "lacunas": [],
+      "duplicacoes": [],
+      "duvidas": [],
+      "retificacoes_inline_na_fonte": [],
+      "amostras_visuais_revisadas": [
+        28
+      ],
+      "notas": "Cada item mantém texto e hierarquia impressos. Blocos comuns vinculados a todos os cargos; itens idênticos repetidos sob cargos distintos foram mesclados com escopos e páginas acumulados. Anotações inline de retificação foram preservadas no relatório, separadas do conteúdo programático. Estado consolidado conforme identificação documental do manifesto."
+    },
+    {
+      "documento_id": "doc_7eaeac779c9a2a5a6f9e",
+      "concurso": "2024-SEPLAG-CE-APO",
+      "arquivo": "Cebraspe/2024-SEPLAG-CE-APO/editais/abertura-atualizada.pdf",
+      "paginas_pdf": 53,
+      "paginas_conteudo_programatico": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "tipo_publicacao": "consolidado",
+      "cargos": [
+        [
+          "Cargo 1: Analista de Gestão Pública — Área de Atuação: Gestão e Desenvolvimento de Pessoas",
+          "Gestão e Desenvolvimento de Pessoas"
+        ],
+        [
+          "Cargo 2: Analista de Gestão Pública — Área de Atuação: Governança e Gestão Corporativa",
+          "Governança e Gestão Corporativa"
+        ],
+        [
+          "Cargo 3: Analista de Gestão Pública — Área de Especialidade: Ciência da Computação ou afins na área da Tecnologia da Informação e Comunicação",
+          "Ciência da Computação/TIC"
+        ],
+        [
+          "Cargo 4: Analista de Gestão Pública — Área de Especialidade: Contabilidade Pública",
+          "Contabilidade Pública"
+        ],
+        [
+          "Cargo 5: Analista de Planejamento e Orçamento",
+          "Planejamento e Orçamento"
+        ]
+      ],
+      "blocos": {
+        "cabecalhos_disciplina": 47,
+        "topicos_numerados": 1090
+      },
+      "topicos_total": 1094,
+      "ocorrencias_repetidas_mescladas": 43,
+      "topicos_numerados": 1051,
+      "numeros_amostra_inicio": [
+        "1",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "numeros_amostra_fim": [
+        "14.2",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "1",
+        "1.1",
+        "2",
+        "3",
+        "4"
+      ],
+      "lacunas": [],
+      "duplicacoes": [],
+      "duvidas": [],
+      "retificacoes_inline_na_fonte": [
+        {
+          "pagina": 35,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  2  –  SEPLAG/CE,  de  02  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 35,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  2  –  SEPLAG/CE,  de  02  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 35,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 36,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 36,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 38,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 39,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 39,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 40,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 40,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 45,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 46,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        },
+        {
+          "pagina": 48,
+          "texto_literal": "(Retificado  por  meio  do  Edital  nº  3  –  SEPLAG/CE,  de  21  de  maio  de  2024,  divulgado  no  endereço  eletrônico http://www.cebraspe.org.br/concursos/seplag_ce_24)"
+        }
+      ],
+      "amostras_visuais_revisadas": [
+        39
+      ],
+      "notas": "Cada item mantém texto e hierarquia impressos. Blocos comuns vinculados a todos os cargos; itens idênticos repetidos sob cargos distintos foram mesclados com escopos e páginas acumulados. Anotações inline de retificação foram preservadas no relatório, separadas do conteúdo programático. Estado consolidado conforme identificação documental do manifesto."
+    },
+    {
+      "documento_id": "doc_1bb168a428350d5f217d",
+      "concurso": "2025-SEFAZ-RJ-FINANCAS",
+      "arquivo": "Cebraspe/2025-SEFAZ-RJ-FINANCAS/editais/abertura-atualizada.pdf",
+      "paginas_pdf": 64,
+      "paginas_conteudo_programatico": [
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "tipo_publicacao": "consolidado",
+      "cargos": [
+        [
+          "Cargo 1: Analista em Finanças Públicas — Especialidade: Administrativo-Financeira",
+          "Administrativo-Financeira"
+        ],
+        [
+          "Cargo 2: Analista em Finanças Públicas — Especialidade: Contábil-Financeira",
+          "Contábil-Financeira"
+        ],
+        [
+          "Cargo 3: Analista em Finanças Públicas — Especialidade: Econômico-Financeira",
+          "Econômico-Financeira"
+        ]
+      ],
+      "blocos": {
+        "cabecalhos_disciplina": 25,
+        "topicos_numerados": 776
+      },
+      "topicos_total": 801,
+      "ocorrencias_repetidas_mescladas": 0,
+      "topicos_numerados": 776,
+      "numeros_amostra_inicio": [
+        "1",
+        "1.1",
+        "1",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7",
+        "1.8",
+        "1.9"
+      ],
+      "numeros_amostra_fim": [
+        "4.1",
+        "4.2",
+        "5",
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5",
+        "5.6",
+        "5.7",
+        "6",
+        "6.1"
+      ],
+      "lacunas": [],
+      "duplicacoes": [],
+      "duvidas": [],
+      "retificacoes_inline_na_fonte": [],
+      "amostras_visuais_revisadas": [
+        52
+      ],
+      "notas": "Cada item mantém texto e hierarquia impressos. Blocos comuns vinculados a todos os cargos; itens idênticos repetidos sob cargos distintos foram mesclados com escopos e páginas acumulados. Anotações inline de retificação foram preservadas no relatório, separadas do conteúdo programático. Estado consolidado conforme identificação documental do manifesto."
+    }
+  ]
+}

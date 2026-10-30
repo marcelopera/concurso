@@ -1,0 +1,120 @@
+{
+  "grupo": "fcc_vunesp_editais",
+  "agente": "fleet-luna-fcc-vunesp-editais",
+  "metodo": "cache de linhas e bbox pdfplumber; escopos, cabeçalhos e blocos semânticos lidos no contexto dos editais; itens numerados separados quando explícitos; texto integral de cada bloco mantido; nenhum cronograma, requisito ou atribuição tratado como conteúdo programático",
+  "total_documentos": 4,
+  "total_topicos": 585,
+  "documentos": [
+    {
+      "documento_id": "doc_4e7d69a7ee3f185e9d35",
+      "banca": "FCC",
+      "concurso": "2026-SEFAZ-SP-APOFP",
+      "arquivo": "FCC/2026-SEFAZ-SP-APOFP/editais/01-abertura.pdf",
+      "paginas_manifesto": 40,
+      "paginas_lidas": 40,
+      "paginas_conteudo_programatico": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "topicos_extraidos": 180,
+      "topicos_por_cargo": {
+        "Analista em Planejamento, Orçamento e Finanças Públicas": 180
+      },
+      "especialidades": [
+        "Ciências de Dados e Tecnologia da Informação",
+        "Contabilidade Pública",
+        "Orçamento e Finanças Públicas"
+      ],
+      "pendencias": 0,
+      "amostras_visuais_revisadas": [],
+      "observacoes": []
+    },
+    {
+      "documento_id": "doc_8f4a14e95f8cc0baa09a",
+      "banca": "Vunesp",
+      "concurso": "2023-CAMPREV-CONTADOR",
+      "arquivo": "Vunesp/2023-CAMPREV-CONTADOR/editais/abertura.pdf",
+      "paginas_manifesto": 36,
+      "paginas_lidas": 36,
+      "paginas_conteudo_programatico": [
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "topicos_extraidos": 124,
+      "topicos_por_cargo": {
+        "Agente Administrativo": 3,
+        "Assistente Social": 5,
+        "Contador": 5,
+        "Economista": 5,
+        "Procurador": 114
+      },
+      "especialidades": [],
+      "pendencias": 0,
+      "amostras_visuais_revisadas": [],
+      "observacoes": []
+    },
+    {
+      "documento_id": "doc_0ef744d31327692325c5",
+      "banca": "Vunesp",
+      "concurso": "2023-SAO-PAULO-AFTM",
+      "arquivo": "Vunesp/2023-SAO-PAULO-AFTM/editais/abertura.pdf",
+      "paginas_manifesto": 55,
+      "paginas_lidas": 55,
+      "paginas_conteudo_programatico": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ],
+      "topicos_extraidos": 281,
+      "topicos_por_cargo": {
+        "Auditor Fiscal Tributário Municipal": 281
+      },
+      "especialidades": [
+        "Gestão Tributária",
+        "Tecnologia da Informação"
+      ],
+      "pendencias": 0,
+      "amostras_visuais_revisadas": [],
+      "observacoes": []
+    },
+    {
+      "documento_id": "doc_3cf98ff08920cbb07ace",
+      "banca": "FCC",
+      "concurso": "2026-SEFAZ-SP-APOFP",
+      "arquivo": "FCC/2026-SEFAZ-SP-APOFP/editais/02-retificacao.pdf",
+      "paginas_manifesto": 2,
+      "paginas_lidas": 2,
+      "paginas_conteudo_programatico": [],
+      "topicos_extraidos": 0,
+      "topicos_por_cargo": {},
+      "especialidades": [],
+      "pendencias": 0,
+      "amostras_visuais_revisadas": [],
+      "observacoes": [
+        "Retificação 02/2026 altera prazos de recurso e cronograma; não retifica o conteúdo programático. Não gera tópicos duplicados; tipo_publicacao do documento identificado como retificacao."
+      ]
+    }
+  ]
+}

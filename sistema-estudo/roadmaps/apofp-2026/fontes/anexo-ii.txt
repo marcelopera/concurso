@@ -1,0 +1,357 @@
+=== PÁGINA 31 ===
+ 
+ 
+ 
+ 
+ANEXO II 
+CONTEÚDO PROGRAMÁTICO 
+ 
+PROVA 1 e PROVA 3 
+CONHECIMENTOS BÁSICOS – Áreas de conhecimento de Orçamento e Finanças Públicas, Contabilidade Pública e 
+Ciências de Dados e Tecnologia da Informação 
+ 
+Administração Geral, Administração Pública e Auditoria Governamental 
+ 
+Administração Geral e Pública (Convergência Público-Privada): Evolução do Pensamento Administrativo: Teorias clássica, 
+humanística, neoclássica, estruturalista, comportamental e sistêmica/contingencial. Funções do Administrador (PODC): 
+Planejamento, Organização, Direção e Controle. Estrutura Organizacional e Departamentalização: Centraliza ção, 
+descentralização, concentração e desconcentração; tipos de estruturas (linear, funcional, linha -staff, matricial, por 
+projetos e em rede). Processo Decisório: Tipos de decisões (programadas e não programadas), modelos de tomada de 
+decisão e racionalid ade limitada. Planejamento Estratégico: Formulação de missão, visão e valores; diagnóstico do 
+ambiente interno e externo (Análise SWOT, 5 Forças de Porter, Cadeia de Valor, OKR). Gestão por Processos (BPM): 
+Abordagem por processos, técnicas de mapeamento, análise, redesenho e melhoria contínua de processos. Gestão de 
+Projetos: Conceitos e ciclo de vida de projetos (metodologias tradicionais como PMBOK e metodologias ágeis como 
+Scrum e Kanban). Comportamento Organizacional: Motivação, liderança, comunicação organizacional, cultura e 
+dinâmica de equipes. Gestão Estratégica de Pessoas: Gestão por competências, recrutamento, seleção, treinamento e 
+desenvolvimento (T&D) e métodos de avaliação de desempenho. Modelos de Gestão Pública: Reformas administrativas, 
+transição do modelo patrimonialista para burocrático e gerencial (New Public Management). Governança, Accountability 
+e Transparência: Estado regulador, controle social, governo eletrônico e aplicação da Lei de Acesso à Informação (Lei nº 
+12.527/2011 e Decreto estadual nº 68.155/2023. Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).  
+Parcerias com o Setor Privado e Terceiro Setor: Organizações Sociais (OS), OSCIPs, Lei nº 13.019/2014 (MROSC), 
+contratos de gestão, convênios e consórcios públicos. Ciclo de Políticas Públicas: Construção de agendas, formulação, 
+implementação e financiamen to de políticas públicas. Indicadores de Desempenho: Aplicação dos "5 Es" da gestão 
+pública (Eficiência, Eficácia, Efetividade, Economicidade e Execução). Avaliação de Programas: Métodos de análise custo-
+benefício e custo-efetividade na entrega de serviços públicos. 
+ 
+Auditoria Governamental e Controle Interno: Fundamentos e Tipologias de Auditoria Governamental: Conceito e 
+Distinções; Tipos de Auditoria: Auditoria de conformidade (legalidade), auditoria financeira (demonstrativos) e auditoria 
+operacional (avaliação de desempenho e gestão). Instrumentos de Fiscal ização: Auditoria, levantamento, 
+monitoramento, acompanhamento e inspeção. Modelos de Gestão de Riscos e Controle: COSO I (Controle Interno - 
+Estrutura Integrada), COSO ERM (Gerenciamento de Riscos Corporativos) e norma ABNT NBR ISO 31000. Modelo das 
+Três Linhas (IIA): Atribuições da gestão operacional, das funções de riscos/conformidade e da auditoria interna. Normas 
+e Modelos de Capacidade: Estrutura Internacional de Práticas Profissionais do IIA (IPPF), NBC TA/NBASP e o modelo IA-
+CM ( Internal Audit Capability Model for the Public Sector ). Sistema de Controle Interno: Funções constitucionais do 
+controle interno no Poder Executivo (Artigos 70 e 74 da Constituição Federal de 1988). Controladoria Geral do Estado e 
+suas atribuições.  Ouvidoria Geral do Estado. Integridade e Ética: Programas de integridade, gestão de riscos de 
+fraude/corrupção (Lei nº 12.846/2013 - Lei Anticorrupção) e diretrizes de ESG aplicadas à administração pública. 
+Ouvidoria Geral do Estado. Resposta aos órgãos de controle.  
+ 
+Direito Administrativo 
+Teoria Geral, Princípios e Organização Administrativa. Conceito, Objeto e Fontes do Direito Administrativo: Lei, doutrina, 
+jurisprudência e costumes. Estado, Governo e Administração Pública: Conceito, elementos constitutivos, órgãos públicos 
+(classificação e teorias da imputação). Estrutura da Administração Pública: Administração Direta e Indireta. 
+Centralização, Descentralização, Concentração e Desconcentração. Entidades da Administração Indireta. Regime 
+Jurídico-Administrativo e Princípios. Atos Administr ativos e Poderes da Administração: Atos Administrativos: Conceito, 
+requisitos/elementos de validade. Atributos dos atos administrativos. Classificação e espécies de atos. Extinção dos atos 
+administrativos. Convalidação e Decadência Administrativa. Poderes da Administração Pública. Agentes Públicos e 
+Regime Estatutário: Conceito e Classificação dos Agentes Públicos. Cargo, Emprego e Função Pública. Regime 
+Constitucional dos Servidores (Artigos 37 a 41 da Constituição Federal de 1988). Direitos, Deveres e Res ponsabilidades 
+dos Servidores. Processo Administrativo Disciplinar (PAD) e Decreto estadual nº 69.122/2024 . Licitações, Contratos e 
+Serviços Públicos: Nova Lei de Licitações e Contratos Administrativos (Lei nº 14.133/2021).  Contratos Administrativos. 
+
+=== PÁGINA 32 ===
+ 
+ 
+ 
+ 
+Serviços Públicos e Formas de Parceria. Bens Públicos. Responsabilidade Civil do Estado. Controle da Administração 
+Pública. Improbidade Administrativa (Lei nº 8.429/1992 com alterações da Lei nº 14.230/2021). Integridade, 
+Transparência e Governança: Lei de Acesso à Informação (Lei nº 12.527/2011) e Decreto estadual nº 68.155/2023 ; Lei 
+Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD); Decreto estadual nº 68.769/24 (Política de Dados Abertos da 
+Administração Pública direta e autárquica do Estado de São Paulo); Lei Anticorrupção (Lei nº 12.846/2013); Estatuto do 
+servidor público do Estado de São Paulo (Lei nº 10.261, de 28/10/1968). 
+ 
+Direito Constitucional 
+Teoria Geral da Constituição, Poder Constituinte e Hermenêutica: Teoria do Estado e da Constituição. Aplicabilidade e 
+Eficácia das Normas Constitucionais. Poder Constituinte. Hermenêutica e Interpretação Constitucional. Direitos e 
+Garantias Fundamentais. R emédios Constitucionais. Organização Político -Administrativa do Estado. Administração 
+Pública na Constituição Federal de 1988. Poder Legislativo e Processo Legislativo. Fiscalização Contábil, Financeira e 
+Orçamentária. Poder Executivo e Judiciário. Finanças Públicas e Orçamentos (Artigos 163 a 169 da Constituição Federal 
+de 1988): Instrumentos de Planejamento; Princípios Orçamentários Constitucionais; Processo Legislativo Orçamentário 
+e Vedações; Limites com Pessoal e Finanças. Sistema Tributário Nacional e  Repartição de Receitas ( Arts. 145 a 162): 
+Princípios gerais, limitações ao poder de tributar e espécies tributárias; Repartição constitucional de competências e das 
+receitas tributárias (transferências obrigatórias e critérios federativos); Reforma Tributária (EC nº 132/2023). Co ntrole 
+de Constitucionalidade: Sistemas de Controle; Instrumentos Especiais. Ordem Econômica e Financeira (Arts. 170 a 192. 
+Da Ordem Social (Arts. 193 a 232). Constituição do Estado de São Paulo. 
+ 
+Economia 
+Teoria Microeconômica: Eficiência e bem-estar. Equilíbrio parcial e geral. Oferta, demanda e elasticidades. Oligopólio e 
+competição monopolística. Monopólio natural. Assimetria de informação. Bens públicos e bens meritórios. Curva de 
+Laffer. Economia do bem -estar e eficiência de Pareto. Externalidades. Falhas de mercado. Incidência tributária. 
+Regulação econômica. Teoremas fundamentais do bem-estar. Teoria da escolha pública. Tributação ótima e excesso de 
+gravame. Tributação, eficiência e equidade. 
+Teoria Macroeconômica: Crescimento econômico e produtividade. Modelos de determinação da renda. Multiplicadores 
+fiscais. Política monetária e fiscal em diferentes regimes. Balanço de pagamentos. Consumo, poupança e investimento. 
+Contabilidade Nacional e agregados macroeconômicos. Crescimento econômico. Curva de Phillips. Inflação e índices de 
+preços. Mercado de trabalho e desemprego. Modelo IS -LM. Modelo Mundell-Fleming. Modelos clássico e keynesiano. 
+Moeda e sistema bancário. Multiplicador keynesiano. Oferta e demanda agregadas. Produto, renda e despesa. Regimes 
+e taxas de câmbio. Economia aberta. Efeitos de inflação, juros, câmbio e crescimento sobre arrecadação, despesa e 
+dívida. Efeitos macroeconômicos da composição do gasto público. Elasticidade das receitas públicas em relação ao nível 
+de atividade e aos preços. Investimento público, produtividade e crescimento. 
+Avaliação econômica de projetos : Projeto de investimento: conceitos, importância, características e limitações da 
+elaboração e análise de projetos; etapas na elaboração de projetos; metodologias de avaliação e seleção de projetos; 
+taxa mínima de atratividade; parâmetros para análise de projetos (vida econômica, depreciação, valor residual, capital 
+de giro); indicadores econômicos de projetos e sua utilização para tomada de decisão; análise de sensibilidade e 
+cenários; incorporação da análise de risco e incerteza na avaliação e seleção de  projetos; análise de projetos sociais; 
+modelagem de Estrutura a Termo de Taxa de Juros (ETTJ); Duration; noções de Administração de Risco de Mercado 
+(Value at Risk).  
+ 
+Língua Portuguesa 
+Ortografia e acentua ção. Emprego do sinal indicativo de crase. Compreens ão e interpreta ção de textos de g êneros 
+variados. Relação do texto com seu contexto hist órico. Denotação e conota ção. Discurso direto, discurso indireto e 
+discurso indireto livre. Intertextualidade. Figuras de linguagem. Morfossintaxe. Elementos estruturais e processos de 
+formação de palavras. Sinon ímia e anton ímia. Pontuação. Pronomes. Concord ância nominal e concord ância verbal. 
+Flexão nominal e flex ão verbal. Vozes do verbo. Correla ção de tempos e modos verbais. Reg ência nominal e reg ência 
+verbal. Coordenação e subordinação. Conectivos e valor semântico.  
+ 
+Matemática Financeira / Estatística 
+Matemática Financeira: Regimes de capitalização em juros simples e compostos; montante, juros e número de períodos; 
+taxas nominal, efetiva e real (com inflação) e conversão de taxas; equivalência de taxas e de capitais (data focal); 
+capitalização contínua; séries de pagamentos u niformes e não uniformes; descontos: descontos simples comercial 
+(bancário) e racional, e descontos compostos comercial e racional; amortizações: Sistema Price (francês), Sistema de 
+
+=== PÁGINA 33 ===
+ 
+ 
+ 
+ 
+Amortização Constante (SAC) e Sistema Misto; fluxo de caixa, valor presente e valor futuro; avaliação econômica de 
+projetos: Valor Presente Líquido, Taxa Interna de Retorno.  
+Estatística: Estatística descritiva e análise exploratória de dados: tipos de variáveis; construção e interpretação de 
+tabelas, gráficos e diagramas; medidas descritivas de tendência central, dispersão, assimetria e curtose; identificação de 
+outliers; análise de distri buições de frequências; covariância e correlação linear entre variáveis. Probabilidades: 
+definições básicas, axiomas e propriedades; probabilidade condicional, independência e teorema de Bayes ; variáveis 
+aleatórias discretas e contínuas; distribuições de probabilidade (Bernoulli, binomial, multinomial, Poisson, geométrica, 
+hipergeométrica, uniforme, normal, exponencial, Beta, Gama, t de Student, Qui -quadrado e F); Teorema Central do 
+Limite; esperança matemática, variância e funções geradoras de momentos. Inferência estatística: técnicas de 
+amostragem e estimação; métodos probabilísticos (aleatória simples, estratificada, sistemática e por conglomerados) e 
+não probabilísticos; tamanho da amostra; estimativas pontuais e intervalares. testes de hipóteses; erros tipo I e II; valor-
+p e poder do teste; comparação de médias e proporções; testes paramétricos e não paramétricos; análise de variância 
+(ANOVA). R egressão e predição: regressão linear simples e múltipla; diagnóstico e validação de modelos; séries 
+temporais: (tendência, sazonalidade, autocorrelação e modelos ARIMA); estacionariedade. Modelagem estatística e 
+aprendizado de máquina: visualização, interpretação e comunicação de resultados; aprendizado supervisionado e não 
+supervisionado; processos de treinamento, validação e teste; métodos e métricas de avaliação de modelos de 
+classificação, incluindo matriz de confusão, acurácia, sensibilidade (recall), especificidade, precisão, F1-score, curva ROC 
+e área sob a curva ROC (AUC-ROC); métricas de avaliação de modelos de regressão, incluindo erro absoluto médio (MAE), 
+erro quadrático médio (M SE), raiz do erro quadrático médio (RMSE) e coeficiente de determinação (); modelos 
+supervisionados, incluindo regressão linear, regressão logística, árvores de decisão, florestas aleatórias (Random Forest), 
+k-vizinhos mais próximos (k- NN) e máquinas de v etores de suporte (SVM); métodos não supervisionados, incluindo k -
+means, agrupamento hierárquico, análise de componentes principais (PCA), análise de componentes independentes 
+(ICA) e regras de associação ; overfitting e underfitting; regularização Ridge e Lasso; seleção de variáveis e redução de 
+dimensionalidade; identificação de padrões, tendências e anomalias. 
+ 
+Administração Financeira e Orçamentária 
+Classificação da despesa orçamentária. Classificação da receita orçamentária. Classificação funcional. Classificação 
+institucional. Classificação programática. Fontes e destinação de recursos. Natureza da receita e da despesa. Alterações 
+orçamentárias. Cré ditos especiais. Créditos extraordinários. Créditos suplementares. Descentralização de créditos. 
+Emendas parlamentares e orçamento impositivo. Conta Única e gestão de disponibilidades. Contingenciamento e 
+limitação de empenho. Cronograma de desembolso. Des pesas de exercícios anteriores. Empenho. liquidação e 
+pagamento da despesa. Previsão, lançamento, arrecadação e recolhimento da receita. Programação financeira. Restos 
+a pagar. Suprimento de fundos. Ciclo e processo orçamentário. Conceito, funções e nature za do orçamento público. 
+Orçamento base zero. Orçamento de desempenho. Orçamento participativo e orçamento cidadão. Orçamento 
+tradicional. Orçamento -programa. Princípios orçamentários. Acompanhamento da execução orçamentária. Controle 
+orçamentário. Mensura ção de desempenho orçamentário. Sistemas de administração orçamentária e financeira. 
+Estrutura programática. Integração entre planejamento e orçamento. Lei de Diretrizes Orçamentárias (LDO). Lei 
+Orçamentária Anual (LOA). Plano Plurianual (PPA). Programas, ações, objetivos e metas. 
+ 
+Contabilidade Geral e Pública 
+Contabilidade Aplicada ao Setor Público: conceito, objeto, campo de aplicação e objetivos da Contabilidade Aplicada ao 
+Setor Público. Patrimônio público: conceito, composição e variações patrimoniais. Ativos, passivos e patrimônio líquido 
+no setor público. Receita e despesa sob os enfoques orçame ntário e patrimonial. Regimes orçamentário e patrimonial. 
+Fatos contábeis e variações patrimoniais quantitativas e qualitativas. Reconhecimento, mensuração , registro e 
+evidenciação dos elementos patrimoniais. Sistema contábil aplicado ao setor público. Plano de Contas Aplicado ao Setor 
+Público (PCASP): estrutura, natureza das informações e classes de contas. Manual de Contabilidade Aplicada ao Setor 
+Público (M CASP). Escrituração e registro dos atos e fatos da administração pública. Integração entre execução 
+orçamentária, financeira e patrimonial. Demonstrações Contábeis Aplicadas ao Setor Público (DCASP): finalidade e 
+estrutura das Demonstrações Contábeis (Bala nço Orçamentário, Balanço Financeiro, Balanço Patrimonial, 
+Demonstração das Variações Patrimoniais, Demonstração das Mutações do Patrimônio Líquido e Demonstração dos 
+Fluxos de Caixa). Notas Explicativas. 
+Contabilidade Geral: conceito, objeto, finalidade e usuários da contabilidade. Patrimônio: bens, direitos , obrigações e 
+patrimônio líquido. Equação patrimonial. Ativo, passivo e patrimônio líquido. Contas patrimoniais e contas de resultado. 
+Débito e crédito. Método das partidas dobradas. Escrituração contábil. Fatos contábeis e suas variações patrimoniais. 
+Regime de competência e caixa. Receitas e despesas. 
+
+=== PÁGINA 34 ===
+ 
+ 
+ 
+ 
+ 
+Direito Financeiro e Finanças Públicas 
+Fontes e princípios do Direito Financeiro, Lei de Responsabilidade Fiscal – Lei Complementar nº 101/2000, Lei nº 
+4.320/1964, Normas constitucionais de finanças públicas. Disciplina constitucional do PPA, LDO e LOA. Antecipação de 
+Receita Orçamentária (ARO). Crédito público. Dívida pública e disciplina constitucional. Empréstimos públicos. Garantias 
+e contragarantias. Operações de crédito. Regra de ouro. Despesa com pessoal e limites legais. Despesa obrigatória de 
+caráter continuado. Requisitos para geração de despesas. Conceito jurídico de despesa pública. Princípio da legalidade 
+da despesa. Atividade financeira do Estado. Compatibilidade entre PPA, LDO e LOA. Fiscalização e controle dos 
+orçamentos. Disciplina constitucional e legal dos precatórios. Iniciati va e processo legislativo orçamentário. Natureza 
+jurídica do orçamento. Conceito jurídico de receita pública. Renúncia de receita. Dívida ativa. Ingressos e receitas 
+públicas. Receitas originárias e derivadas. Equalização fiscal. Federalismo fiscal. Reparti ção de receitas. Transferências 
+intergovernamentais. Critérios acima e abaixo da linha. Déficit público e seu financiamento. Necessidade de 
+Financiamento do Setor Público (NFSP). Resultado nominal. Resultado operacional. Resultado primário. 
+ 
+Fluência de Dados 
+Ciência de Dados:  Conceitos fundamentais de ciência de dados. Tipos de dados: estruturados, não -estruturados, 
+semiestruturados. O ciclo de vida da informação e do processo de Ciência de Dados. Metodologia CRISP-DM: fases e 
+ciclo de aplicação. Big Data e Arquitetura de Dados: Data Warehouse, Data Mart, Data Lake, Data Lakehouse. Engenharia 
+de Dados. Pré -processamento de Dados: Técnicas para preparação, limpeza e transformação de dados. Qualidade de 
+dados: completude, consistência, acurácia, validade e unicidade . Banco de dados: Bancos de Dados Relacionais e Não 
+Relacionais (NoSQL). Linguagem SQL: DQL, Funções de Agregação, Agrupamento, Junção, Ordenação, Filtros e 
+Operações Lógicas. Análise de dados: Agrupamentos, Tendências e Projeções. Data Mining. Noções de Ap rendizado de 
+Máquina (Machine Learning), Aprendizado Profundo (Deep  Learning), Inteligência Artificial (IA) e Processamento de 
+Linguagem Natural (PLN). Noções de IA generativa e modelos de linguagem de grande escala (LLMs ). Governança de 
+Dados: conceito, tipos (centralizada, compartilhada e colegiada), papéis e responsabilidades. Gestão e qualidade de 
+dados. Governança e Ética na IA: Transparência, Responsabilidade, Explicabilidade, Privacidade, Segurança, Alucinação, 
+Viés. 
+Segurança da Informação e Proteção de Dados:  princípios de confidencialidade, integridade, disponibilidade e 
+rastreabilidade. Ameaças, vulnerabilidades, riscos e controles de segurança. Classificação e controle de acesso a dados. 
+Anonimização, mascaramento e políticas de retenção de dados. Conformid ade legal e regulatória (Marco Civil da 
+Internet). LGPD: princípios, bases legais, direitos do titular, agentes de tratamento, tratamento de dados pessoais pelo 
+Poder Público e segurança e tratamento de incidentes.   
+
+=== PÁGINA 35 ===
+ 
+ 
+ 
+ 
+PROVA 2 
+ 
+A01: CONHECIMENTOS ESPECÍFICOS - Área de conhecimento de Orçamento e Finanças Públicas 
+Apuração e utilização do superávit financeiro por fonte/destinação de recursos. Procedimentos operacionais para 
+abertura e execução de créditos suplementares, especiais e extraordinários. Remanejamentos, transposições, 
+transferências e demais alterações orçamentárias. Superávit financeiro, excesso de arrecadação, anulação de dotações 
+e operações de crédito como fontes para abertura de créditos. Descentralização de créditos e de recursos financeiros. 
+Emendas parlamentares sob a perspectiva da execução orçame ntária e financeira. Empenho ordinário, estimativo e 
+global em situações operacionais. Execução orçamentária e financeira de convênios, fundos e instrumentos congêneres. 
+Liquidação e pagamento: procedimentos e controles operacionais. Reforço e anulação de empenho. Alteração de fonte 
+e controle de saldos por fonte/destinação. Compatibilidade entre fonte/destinação e natureza da despesa. Controle 
+operacional de fontes e destinações de recursos. Recursos vinculados, ordinários, próprios, de transferências, convênios 
+e operações de crédito. Contingenciamento, limitação de empenho, bloqueio e recomposição de limites. Cronograma 
+de desembolso e fluxo financeiro. Gestão de disponibilidades e compatibilização entre dotação, limite e caixa. Limites 
+de movimentação, e mpenho e pagamento. Bloqueio, desbloqueio, cancelamento e pagamento de restos a pagar. 
+Disponibilidade de caixa e controle de restos a pagar por fonte/destinação. Encerramento do exercício orçamentário e 
+financeiro. Inscrição de restos a pagar processados e não processados. 
+Tópicos Avançados da Lei de Responsabilidade Fiscal – Lei Complementar nº 101/2000, Lei nº 4.320/1964 e Normas 
+constitucionais de finanças públicas. Regras de movimentação, aplicação, devolução e destinação de recursos públicos 
+estaduais. Transferências financeiras entre Tesouro, fundos, autarquias, fundações e demais entidades. Critérios, bases 
+de cálculo, coeficientes, prazos e procedimentos de entrega e repartição de receitas. Fundo de Participação dos Estados 
+e do Distrito Federal – FPE, Fundo de Participação dos Municípios – FPM, Participação dos entes subnacionais no produto 
+da arrecadação do IR, IPI, ITR, ICMS e IPVA. Repartição constitucional e legal de receitas entre União, Estados, Distrito 
+Federal e Municípios. Transferências constitucionais, lega is, voluntárias, fundo a fundo e especiais. Controle e 
+fiscalização da gestão fiscal. Prestação de contas. Transferências voluntárias. Transparência da gestão fiscal. Dinâmica da 
+dívida pública. Dívida pública. Regras fiscais e âncoras fiscais. Relação ent re juros, crescimento, resultado primário e 
+dívida. Sustentabilidade fiscal, Composição, custo, indexadores e perfil de vencimentos da dívida pública. Garantias e 
+contragarantias da União. 
+ 
+ 
+B02: CONHECIMENTOS ESPECÍFICOS - Área de conhecimento de Contabilidade Pública 
+Contabilidade Geral: Patrimônio: Componentes Patrimoniais: Ativo, Passivo e Patrimônio Líquido. Equação Fundamental 
+do Patrimônio. Fatos contábeis e respectivas variações patrimoniais. Apuração de resultados. Partidas dobradas. 
+Escrituração: Conceito e métodos – lançamento contábil: Rotina e Fórmulas; Processo de Escrituração; Escrituração de 
+Operações Financeiras. Escrituração de Operações com Mercadorias. Métodos de Avaliação de Estoques. Apuração do 
+Custos das operações com Mercadorias.  Balanço patrimonial: obrigatoriedade e apresentação; conteúdo dos grupos e 
+subgrupos. Elaboração. Classificação das contas, critérios de avaliação do Ativo e Passivo e Levantamento do Balanço de 
+acordo com a Lei n.º 6.404/1976 (Lei das Sociedades por Ações e modificações e com os pronunciamentos contábeis do 
+Comitê de Pronunciamentos Contábeis). Demonstração do Resultado do Exercício: Estrutura, Características e 
+Elaboração de acordo com a Lei n.º 6.404/1976 e modificações. Apuração da Receita Líquida, do Custo das Mercadorias 
+Vendidas ou dos Serviços Prestados e do Lucro Bruto. Apuração do Resultado do Exercício, antes e depois da Provisão 
+para o Imposto sobre a Renda e Contribuição Social e participações e apuração do lucro líquido do exercício. 
+Pronunciamentos Técnicos do Comitê de Pronunciamentos Contábeis. 
+Contabilidade Pública: Estrutura Conceitual e Normas Brasileiras de Contabilidade Aplicadas ao Setor Público (NBC TSP) 
+vigentes. Manual de Contabilidade Aplicada ao Setor Público (MCASP) vigente. Plano de Contas Aplicado ao Setor Público 
+(PCASP): estrutura, natureza da informação, classes, atributos, registros, controles e consolidação. Demonstrações 
+Contábeis Aplicadas ao Setor Público (DCASP). Notas Explicativas. Reconhecimento, mensuração, registro, apresentação 
+e evidenciação de ativos, passivos,  patrimônio líquido,  receitas, despesas e variações patrimoniais. Procedimentos 
+Contábeis Orçamentários, Patrimoniais e Específicos. Lei Federal nº 4.320/1964. Planejamento e orçamento público: 
+PPA, LDO e LOA; princípios orçamentários; receita e despesa orçamentária; classificações; estágios; créditos adicionais; 
+restos a pagar; despesas de exercícios anteriores; fontes ou destinações de recursos. Portaria STN nº 710/2021. Portaria 
+Conjunta STN/SOF nº 163/2001. Execução orçamentária e financeira. Reforma tributária na Constitu ição Federal. 
+Conciliação bancária. Análise das Demonstrações Contábeis e das informações orçamentárias, financeiras e 
+patrimoniais. Siconfi: Matriz de Saldos Contábeis (MSC), Declaração das Contas Anuais (DCA), envio, validação e 
+consistência das informações do RREO e RGF no Siconfi; regras de consistência e validação; consolidação das contas 
+
+=== PÁGINA 36 ===
+ 
+ 
+ 
+ 
+públicas e qualidade da informação contábil e fiscal. Procedimentos Contábeis Aplicados aos RPPS: ativos garantidores, 
+provisões matemáticas previdenciárias, passivo atuarial, resultado atuarial, déficit e superávit atuarial, déficit financeiro, 
+aportes e segregação da massa. 
+Contabilidade de Custos:  Contabilidade financeira e contabilidade gerencial. Evolução da contabilidade de custos. 
+Relação entre contabilidade de custos, contabilidade financeira e contabilidade gerencial. Terminologia da contabilidade 
+de custo. Gasto, investimento, despesa, custo e perda. Objeto de custos e centro de custos. Custo direto e indireto. Custo 
+fixo e variável. Mensuração de custos. Acumulação de custos: por ordem de produção e por processo. Métodos de 
+custeio: custeio por absorção parcial e integral, custeio variável. Custeio baseado em atividades – activity-based costing 
+(ABC). Custeio baseado em atividades direcionado pelo tempo – time-driven activity-based costing (TDABC). Implantação 
+do sistema de custos. Dificuldades e obstáculos na implantação. Relevância da departamentalização dos custos. Cadeia 
+de valor da entidade e sua relevância para a informação de custos. Informação de custos financeira e não financeira. 
+Relação custo-benefício do sistema. Gestão de custos. Usuários da informação de custos. Propósitos da informação de 
+custos. Informação de custos para planejamento, controle e tomada de decisão. Margem de contribuição. Ponto de 
+equilíbrio contábil, financeiro e econômico. Contabilidade de custos no setor público. Norma Brasileira de Contabilidade 
+NBC TSP 34 – Custos no Setor Público.  
+Responsabilidade Fiscal e Demonstrativos: Lei Complementar Federal nº 101/2000 e alterações: Anexo de Metas Fiscais, 
+Anexo de Riscos Fiscais, resultados primário e nominal, programação financeira, cronograma de execução mensal de 
+desembolso e limitação de empenho. Receita. Previsão e arrecadação. Renúncia de receita. Receita Corrente Líquida. 
+Geração de despesas. Despesa obrigatória de caráter continuado. Despesa Total com Pessoal: apuração, limites e 
+medidas de recondução. Transferências voluntárias. Destinação de recursos ao setor privado. Dívida  e endividamento. 
+Operações de crédito. Garantias e contragarantias. Disponibilidade de caixa e restos a pagar. Transparência da gestão 
+fiscal. Controle e fiscalização. Relatório de Gestão Fiscal – RGF e Relatório Resumido da Execução Orçamentária – RREO. 
+Manual de Demonstrativos Fiscais (MDF) vigente. 
+Tecnologia Aplicada à Contabilidade: Integração com sistemas estruturantes. Requisitos dos procedimentos contábeis, 
+de transparência da informação, tecnológicos e de segurança. Qualidade, integridade, consistência, completude e 
+rastreabilidade das informações contábeis, orçamentárias e financeiras. Conciliações e controles automatizados. Análise 
+e visualização de dados aplicadas à contabilidade e às finanças públicas. Uso de ferramentas de Business Intelligence – 
+BI para análise de consistência contábil, conciliação e apuração de custos no setor público. 
+ 
+ 
+C03: CONHECIMENTOS ESPECÍFICOS - Área de conhecimento de Ciências de Dados e Tecnologia da Informação 
+Gestão ágil de produtos e projetos digitais: Gerenciamento de Produto Digital: visão, valor, OKRs, roadmaps; Gestão de 
+Portfólios e Produtos; Metodologias Ágeis: Scrum Guide 2020: responsabilidades, eventos, artefatos e compromissos; 
+Kanban: princípios, práticas, fluxo e métricas; Lean: princípios; SAFe 6.0: papéis e responsabilidades. 
+Ciência de dados e intelig ência artificial: Fundamentos: tipos de dados, ciclo de vida, metodologia CRISP -DM: fases e 
+ciclo de aplicação. Big Data e Arquitetura: Data Warehouse, Data Mart , Data Lake, Data Lakehouse , Processamento 
+distribuído. Engenharia de Dados: pipelines, ETL/ELT, técnicas para tratamento, limpeza, preparação, enriquecimento, 
+normalização, tempo real, qualidade de dados. Processamento em lote ( batch) e processamento de dados em fluxo 
+(streaming). Banco de Dados: relacionais, colunares, NoSQL, Linguagem SQL e variações. Modelagem de dados 
+relacional e dimensional. Análise de Dados: OLAP , mineração , analytics , análise exploratória de dados. Estatística 
+descritiva aplicada à análise de dados. IA e Aprendizado de Máquina: supervisionado e não supervisionado, classificação, 
+regressão, agrupamento ( clustering), redução de dimensionalidade, redes neurais, PLN, Deep Learning , LLMs 
+(conceitos). Treinamento, validação, teste, inferência, sobreajuste ( overfitting) e métricas de avaliação de modelos de 
+classificação e regressão. Ferramentas e Linguagens para ciência de dados: R, Python ( PySpark, pandas, scikit-learn, 
+NLTK). Governança e Ética em IA: transparência, responsabilidade, explicabilidade, privacidade, segurança, alucinação, 
+viés. IA generativa: conceitos, modelos fundacionais, LLMs, prompts, embeddings, recuperação aumentada por geração 
+(RAG) e limitações. 
+Business Intelligence, Analytics  e Visualização: Arquitetura de BI, indicadores, métricas, relatórios, dashboard, análise 
+descritiva, diagnóstica, preditiva e prescritiva. Self-service BI. Visualização e comunicação de dados. Microsoft Power BI, 
+versão vigente: Power Query, linguagem M, modelagem de dados, DAX, medidas, relacionamentos, filtros e dashboards. 
+Modelagem dimensional: tabelas fato e dimensão, esquema estrela, granularidade e hierarquias. DAX: contexto de linha, 
+contexto de filtro, transição de contexto e funções de inteligência de tempo. Power Query: transformações, tipos de 
+dados, combinação e mesclagem de consultas.  
+  
+
+=== PÁGINA 37 ===
+ 
+ 
+ 
+ 
+ANEXO III 
+ 
+Nota 1.: É permitido ao candidato preto, pardo ou indígena manifestar que NÃO deseja se beneficiar do sistema de pontuação 
+diferenciada. Para tanto terá seus direitos exauridos quanto à sua utilização, submetendo-se às regras gerais estabelecidas neste 
+Edital, não podendo interpor  recurso em razão desta opção, seja qual for o motivo alegado (neste caso, não assine esta 
+autodeclaração). 
+Nota 2.: Para fazer jus ao sistema de pontuação diferenciada, enviar – no período destinado às inscrições – via internet, no site da 
+Fundação Carlos Chagas (www.concursosfcc.com.br), por sistema no upload, esta autodeclaração devidamente assinada. 
+ 
+  
