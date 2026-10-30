@@ -1,4 +1,4 @@
-FROM node:24-bookworm-slim AS frontend
+FROM node:25-bookworm-slim AS frontend
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@11.25.0 --activate
 COPY sistema-estudo/package.json sistema-estudo/pnpm-lock.yaml ./
