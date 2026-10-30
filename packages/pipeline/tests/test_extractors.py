@@ -7,13 +7,13 @@ from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 
-from concurso_pipeline.__main__ import run
-from concurso_pipeline.config import Settings
 from pypdf import PdfWriter
 from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 from test_pipeline import document
 
+from concurso_pipeline.__main__ import run
 from concurso_pipeline.common import js, readjl
+from concurso_pipeline.config import Settings
 
 
 def write_pdf(path, lines):

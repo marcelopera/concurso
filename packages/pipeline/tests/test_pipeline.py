@@ -12,11 +12,10 @@ from io import StringIO
 from pathlib import Path
 
 from concurso_pipeline.__main__ import run
+from concurso_pipeline.common import expected_count, ident, js, norm, readjl, writejl
 from concurso_pipeline.config import Settings, execution, source_file
 from concurso_pipeline.stages.review import documents
 from concurso_pipeline.stages.validate import validate_records
-
-from concurso_pipeline.common import expected_count, ident, js, norm, readjl, writejl
 from tools.dataset_manifest import verify
 from tools.import_legacy_pipeline import migrate
 

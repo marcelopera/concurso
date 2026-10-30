@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 import jsonschema
+
 from concurso_contracts import resource_file
 
 ROOT = Path(__file__).resolve().parents[4]
