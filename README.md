@@ -24,11 +24,11 @@ Requisitos: Python 3.10 ou superior (no Windows instale `tzdata` com `python -m 
 cd sistema-estudo
 pnpm install --frozen-lockfile
 pnpm run build
-python scripts/preparar_container.py
-python server.py
+python scripts/inicializar.py
+python -m estudo
 ```
 
-O preparo instala o plano em um banco novo e importa vínculos privados quando disponíveis; ele se recusa a sobrescrever um banco existente. Para iniciar com um banco vazio sem instalar o plano, execute `python server.py` diretamente. Para desenvolvimento, use `pnpm dev` com o servidor Python em execução na porta 8765; o Vite encaminha as chamadas `/api` para ele.
+A inicialização instala o plano apenas quando ainda não existe progresso e preserva bancos existentes. Para iniciar com um banco vazio sem instalar o plano, execute `python -m estudo` diretamente. Para desenvolvimento, use `pnpm dev` com o servidor Python em execução na porta 8765; o Vite encaminha as chamadas `/api` para ele.
 
 Para preparar o ambiente de desenvolvimento e validar o projeto, execute na raiz:
 
@@ -39,7 +39,7 @@ make test
 make run
 ```
 
-`make run` compila a interface e inicializa o plano apenas quando ainda não existe progresso. No Windows sem Make, os comandos equivalentes são `python -m pip install -e ".[dev]"` na raiz e, dentro de `sistema-estudo/`: `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm test`, `python tests/run_demo_suite.py`, `pnpm run build`, `python scripts/inicializar.py` e `python -m estudo`. A suíte de demonstração sempre usa um catálogo temporário e sintético, mesmo quando há dados privados na máquina.
+`make run` compila a interface e inicializa o plano apenas quando ainda não existe progresso. No Windows sem Make, os comandos equivalentes são `python -m pip install -e ".[dev,extract]"` e `python -m unittest discover -s tests/pipeline -v` na raiz e, dentro de `sistema-estudo/`: `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm test`, `python tests/run_demo_suite.py`, `pnpm run build`, `python scripts/inicializar.py` e `python -m estudo`. As suítes usam dados temporários e sintéticos, mesmo quando há dados privados na máquina.
 
 Os testes de navegador usam `pnpm exec playwright install chromium` e `pnpm run test:e2e`, dentro de `sistema-estudo/`. A CI executa lint, contrato JSON Schema, testes Python/JS, build e E2E em Linux, macOS e Windows; no Linux também inicia a imagem Docker e verifica a ausência de PDFs. `make lint` verifica caminhos pessoais, tamanho dos arquivos e links locais da documentação.
 
@@ -53,7 +53,9 @@ Para salvar um banco de progresso, execute `python -m estudo backup dados/estudo
 - `sistema-estudo/catalogo/`: esquema e gerador do catálogo fictício.
 - `sistema-estudo/dados/conteudo.sqlite`: catálogo privado opcional, ignorado pelo Git.
 - `biblioteca-concursos/`: acervo opcional local, ignorado pelo Git.
-- `concurso_codex/`, diretório irmão: pipeline de extração, lotes, auditorias e evidências preservados da execução anterior. Os scripts históricos do pipeline precisam ser adaptados antes de serem executados a partir do novo local.
+- `concurso_pipeline/`: extratores por banca, revisão e geração do catálogo; veja o [guia do pipeline](docs/pipeline.md).
+- `data/`: entradas privadas por execução, JSONL canônico e arquivos gerados; ignorado pelo Git.
+- `concurso_codex/`, diretório irmão: arquivo privado da execução anterior, preservado sem alterações. O importador verifica hashes dos lotes copiados.
 
 Os dados de terceiros ficam fora da versão atual do repositório. A remoção de arquivos do estado atual não os remove do histórico Git; consulte [DATA-LICENSE.md](DATA-LICENSE.md).
 

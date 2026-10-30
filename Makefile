@@ -3,10 +3,11 @@ PNPM ?= pnpm
 
 .PHONY: setup test lint build run
 setup:
-	$(PYTHON) -m pip install -e ".[dev]"
+	$(PYTHON) -m pip install -e ".[dev,extract]"
 	cd sistema-estudo && $(PNPM) install --frozen-lockfile
 
 test:
+	$(PYTHON) -m unittest discover -s tests/pipeline -v
 	$(PYTHON) sistema-estudo/tests/run_demo_suite.py
 	cd sistema-estudo && $(PNPM) test
 
