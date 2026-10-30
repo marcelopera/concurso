@@ -1,7 +1,7 @@
 {
   "name": "sistema-estudo",
   "version": "1.0.0",
-  "description": "Aplicativo local para estudo por questÃƒÂµes, sessÃƒÂµes e revisÃƒÂµes espaÃƒÂ§adas",
+  "description": "Aplicativo local para estudo por questões, sessões e revisões espaçadas",
   "scripts": {
     "dev": "node scripts/copy-excalidraw-fonts.mjs && vite",
     "build": "node scripts/copy-excalidraw-fonts.mjs && vite build",

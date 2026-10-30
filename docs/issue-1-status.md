@@ -28,6 +28,8 @@ Ainda pendentes para depois do merge: backup espelho e snapshot privado no desti
 
 A preservação local não equivale ao armazenamento externo durável originalmente pedido na issue. Essa diferença está registrada como decisão do proprietário. Recuperar a proveniência real dos lotes antigos continua pendente.
 
+Estado das dependências da release em 30/10/2026: não há prova de backup completo do acervo privado. O PR preparatório #34 ensaia a limpeza em clone descartável e mede 137 MiB para 2,2 MiB, mas ainda há cinco caminhos ambíguos e o mailmap real não foi validado; nenhuma ref pública foi alterada. O trabalho do PR #32 para #25 tem aprovação técnica e nove checks verdes, mas ainda não está na `main`. Esses resultados preparatórios não satisfazem os gates de [release](release.md).
+
 ## 3. Pipeline
 
 | Requisito | Implementação e verificação |
@@ -46,18 +48,18 @@ Os parsers de edital preservados ainda têm regras específicas dos concursos or
 
 ## 4. Qualidade de baixa prioridade
 
-README e Makefile usam `inicializar.py` e `python -m estudo`. unittest foi mantido. Migração para pytest/TypeScript, testes de componentes com Vitest/Testing Library, Prettier, limiar numérico de cobertura e supressão dos avisos `use client` permanecem melhorias posteriores. Conforme o comentário da issue, esta seção não bloqueia seu encerramento.
+README e Makefile usam `inicializar.py` e `python -m estudo`. unittest foi mantido. A issue [#27](https://github.com/marcelopera/concurso/issues/27) acompanha fixtures públicas e limiar de cobertura (PR #35 aberto, ainda não incorporado); [#28](https://github.com/marcelopera/concurso/issues/28) acompanha testes de componentes React e formatação (PR #33 aberto, ainda não incorporado). São melhorias de qualidade posteriores, não pré-requisitos da primeira release; declare-as como pendências se continuarem abertas no SHA publicado.
 
 ## 5. GitHub
 
 Aplicado e conferido por API em 30/10/2026: proteção da `main` com PR obrigatório, checks estritos de CI e Security, admins sujeitos à regra, exclusão e force-push bloqueados; secret scanning, push protection e private vulnerability reporting ativados; descrição e topics preenchidos.
 
-Checks exigidos: `test (ubuntu-latest)`, `test (windows-latest)`, `test (macos-latest)`, `dependencies`, `codeql (python)`, `codeql (javascript-typescript)`, `image`, `secrets`. Não se exige aprovação formal de outro colaborador em um repositório pessoal; o parecer Astra é entregue ao proprietário.
+Checks exigidos pela proteção da `main`: `test (ubuntu-latest)`, `test (windows-latest)`, `test (macos-latest)`, `dependencies`, `codeql (python)`, `codeql (javascript-typescript)`, `image`, `secrets` e o check agregado `CodeQL`. Os três jobs `test` também executam E2E; o job `image` verifica a imagem e o smoke test confirma que ela inicia sem PDFs. A lista deve ser lida da proteção real da branch no momento da release, sem presumir que um check ausente está verde. A lacuna conhecida no escopo da auditoria Python está em [#26](https://github.com/marcelopera/concurso/issues/26); um check verde não resolve esse defeito por si só. Não se exige aprovação formal de outro colaborador em um repositório pessoal; o parecer técnico é entregue ao proprietário.
 
-A primeira release `v0.1.0` fica para o commit com histórico limpo. Publicar agora também criaria uma referência para o histórico que ainda contém os dados removidos da árvore.
+A release/tag `v0.1.0` permanece não publicada. Ela depende do backup privado comprovado em [#23](https://github.com/marcelopera/concurso/issues/23) e da limpeza/revisão das refs públicas em [#24](https://github.com/marcelopera/concurso/issues/24). O rastreamento do catálogo e a auditoria de dependências seguem em [#25](https://github.com/marcelopera/concurso/issues/25) e [#26](https://github.com/marcelopera/concurso/issues/26). A checklist, a política de versões e o gate read-only estão em [docs/release.md](release.md) e [tools/check_release_candidate.py](../tools/check_release_candidate.py). O gate exige SHA explícito no HEAD remoto protegido, checks requeridos verdes e evidências locais de backup e limpeza; não cria tag nem release.
 
 ## 6. Conferência do PR #9
 
 Na main `a5d327f`, CI e Security passaram. `server.py` tem 192 linhas e compõe serviços; Vite está em devDependencies, Node tem engines e tzdata é declarado para Windows. Compose usa filesystem somente leitura, cap_drop ALL e no-new-privileges; há um único `.gitignore`. Os checks deste novo PR precisam passar novamente e seus links constam na descrição do PR.
 
-O encerramento completo depende das operações pós-merge da seção 2 e da release, além da proveniência que for recuperável. O PR entrega as correções de código e registra as exceções aprovadas sem apresentar essas etapas futuras como concluídas.
+O encerramento completo depende das operações pós-merge da seção 2 e da release, além da proveniência que for recuperável. Os desdobramentos de #1 são [#23](https://github.com/marcelopera/concurso/issues/23), [#24](https://github.com/marcelopera/concurso/issues/24), [#25](https://github.com/marcelopera/concurso/issues/25), [#26](https://github.com/marcelopera/concurso/issues/26), [#27](https://github.com/marcelopera/concurso/issues/27), [#28](https://github.com/marcelopera/concurso/issues/28) e [#29](https://github.com/marcelopera/concurso/issues/29). Este documento registra pendências e evidências sem apresentar etapas futuras como concluídas.
