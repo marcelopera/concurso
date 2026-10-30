@@ -69,6 +69,11 @@ class PlanTests(unittest.TestCase):
             self.request('/api/catalog?page=abc')
         self.assertEqual(error.exception.code, 400)
 
+    def test_session_steps_are_shared_with_the_client(self):
+        steps = self.request('/api/bootstrap')['steps']
+        self.assertEqual([step['minutes'] for step in steps], server.STEP_MINUTES)
+        self.assertTrue(all(step['title'] and step['hint'] for step in steps))
+
     def test_legacy_progress_upgrade_preserves_data_and_rejects_future_versions(self):
         with server.study_db() as con:
             con.execute("UPDATE lessons SET completed_at='preservado' WHERE lesson_id='personal-lesson'")
