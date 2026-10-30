@@ -2,6 +2,7 @@ import contextlib
 import gc
 import io
 import json
+import sqlite3
 from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
@@ -62,6 +63,76 @@ class PlanTests(unittest.TestCase):
             self.assertTrue(all(u['checklist'] and u['pages'] for u in units))
         self.assertEqual(sum(s['points'] for s in self.plan['subjects'] if s['exam']=='P1'),112)
         self.assertEqual(sum(s['questions'] for s in self.plan['subjects'] if s['exam']=='P1'),80)
+
+    def test_invalid_catalog_page_returns_400(self):
+        with self.assertRaises(HTTPError) as error:
+            self.request('/api/catalog?page=abc')
+        self.assertEqual(error.exception.code, 400)
+
+    def test_legacy_progress_upgrade_preserves_data_and_rejects_future_versions(self):
+        with server.study_db() as con:
+            con.execute("UPDATE lessons SET completed_at='preservado' WHERE lesson_id='personal-lesson'")
+            con.execute('PRAGMA user_version = 0')
+        server.init_db()
+        server.init_db()
+        with server.study_db() as con:
+            self.assertEqual(con.execute('PRAGMA user_version').fetchone()[0], 1)
+            self.assertEqual(con.execute('SELECT count(*) FROM schema_migrations WHERE version=1').fetchone()[0], 1)
+            self.assertEqual(con.execute("SELECT completed_at FROM lessons WHERE lesson_id='personal-lesson'").fetchone()[0], 'preservado')
+            con.execute('PRAGMA user_version = 2')
+        with self.assertRaises(RuntimeError):
+            server.init_db()
+        with server.study_db() as con:
+            con.execute('PRAGMA user_version = 1')
+
+    def test_library_resolves_legacy_paths_and_rejects_escape(self):
+        original = server.LIBRARY_ROOT
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:
+            try:
+                server.LIBRARY_ROOT = Path(tmp).resolve()
+                pdf = server.LIBRARY_ROOT / 'banca' / 'prova.pdf'
+                pdf.parent.mkdir()
+                pdf.write_bytes(b'%PDF-test')
+                self.assertEqual(server.safe_library_file('banca/prova.pdf'), pdf)
+                self.assertEqual(server.safe_library_file(r'C:\old\biblioteca-concursos\banca\prova.pdf'), pdf)
+                self.assertIsNone(server.safe_library_file('../prova.pdf'))
+                self.assertIsNone(server.safe_library_file(r'C:\outside\prova.pdf'))
+            finally:
+                server.LIBRARY_ROOT = original
+
+    def test_pdf_streaming_and_ranges(self):
+        original_root, original_content = server.LIBRARY_ROOT, server.CONTENT_DB
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:
+            try:
+                server.LIBRARY_ROOT = Path(tmp).resolve()
+                server.CONTENT_DB = server.LIBRARY_ROOT / 'catalog.sqlite'
+                (server.LIBRARY_ROOT / 'prova.pdf').write_bytes(b'0123456789')
+                with sqlite3.connect(server.CONTENT_DB) as con:
+                    con.execute('CREATE TABLE documentos(documento_id TEXT, arquivo_local TEXT, nome TEXT)')
+                    con.execute('INSERT INTO documentos VALUES(?,?,?)', ('d', 'prova.pdf', 'prova.pdf'))
+                con.close()
+                def get(value=None):
+                    headers = {'Origin': self.url}
+                    if value is not None:
+                        headers['Range'] = value
+                    return urlopen(Request(self.url + '/api/library/file?document_id=d', headers=headers))
+                with get() as response:
+                    self.assertEqual(response.read(), b'0123456789')
+                    self.assertEqual(response.headers['Accept-Ranges'], 'bytes')
+                with get('bytes=2-5') as response:
+                    self.assertEqual(response.status, 206)
+                    self.assertEqual(response.headers['Content-Range'], 'bytes 2-5/10')
+                    self.assertEqual(response.read(), b'2345')
+                with get('bytes=-3') as response:
+                    self.assertEqual(response.read(), b'789')
+                for value in ('bytes=100-', 'bytes=-0', 'bytes=1-2,4-5'):
+                    with self.assertRaises(HTTPError) as error:
+                        get(value)
+                    self.assertEqual(error.exception.code, 416)
+                    self.assertEqual(error.exception.headers['Content-Range'], 'bytes */10')
+                    error.exception.close()
+            finally:
+                server.LIBRARY_ROOT, server.CONTENT_DB = original_root, original_content
 
     def test_calendar_covers_each_unit_once_and_four_hours_daily(self):
         units={u['lesson_id']:u for s in self.plan['subjects'] for u in s['lessons']}

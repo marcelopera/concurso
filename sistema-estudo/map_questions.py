@@ -18,16 +18,17 @@ import sqlite3
 from question_mapping_rules import COMPILED, language_question, normalize
 
 ROOT = Path(__file__).resolve().parent
-CONTENT = ROOT.parent/'base-questoes'/'dados'/'conteudo.sqlite'
+import os
+CONTENT = Path(os.environ.get('ESTUDO_CONTENT_DB', ROOT/'dados'/'conteudo.sqlite'))
 STUDY = ROOT/'dados'/'estudo.sqlite'
 PLAN = ROOT/'roadmaps'/'apofp-2026'/'roadmap.json'
-OUTPUT = ROOT/'roadmaps'/'apofp-2026'/'vinculacao'
+OUTPUT = ROOT/'dados'/'vinculacao'
 METHOD = 'regras-tematicas-evidencia-v1'
 
 # Exact occurrence overrides are written only after reading the item. A list of
 # lesson keys accepts it; [] records an explicit exclusion. Optional notes explain
 # historical or partial correspondence. No answer or grading data is changed.
-OVERRIDES = ROOT/'roadmaps'/'apofp-2026'/'vinculacao'/'revisoes.json'
+OVERRIDES = OUTPUT/'revisoes.json'
 
 # Broad foundation rules act only as a fallback, not as incidental second links.
 FOUNDATIONS = {'adm_01','da_01','dc_01','eco_03','con_01','con_06','con_07','df_01','afo_01','dad_01'}

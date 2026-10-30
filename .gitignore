@@ -6,6 +6,10 @@
 .venv/
 venv/
 .pytest_cache/
+/base-questoes/execucoes/
+/base-questoes/dados/fontes-visuais/
+/sistema-estudo/tests/evidencias-perfis/
+/sistema-estudo/roadmaps/*/evidencias/
 
 # O acervo e todos os PDFs permanecem somente no computador local.
 /biblioteca-concursos/
@@ -16,11 +20,14 @@ venv/
 /sistema-estudo/dados/*.sqlite-shm
 /sistema-estudo/dados/*.sqlite-wal
 /sistema-estudo/dados/estudo-perfis/
+/sistema-estudo/dados/vinculacao/
 /sistema-estudo/dados/servidor.pid
 /sistema-estudo/dados/servidor.*.log
 /sistema-estudo/public/fonts/
 /sistema-estudo/tests/profiles-ui-*/
 /sistema-estudo/tests/tmp*/
+/sistema-estudo/test-results/
+/sistema-estudo/playwright-report/
 /backup-estudo/
 
 # Imagens Docker exportadas e configuração local

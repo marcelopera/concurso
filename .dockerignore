@@ -15,11 +15,9 @@
 !sistema-estudo/roadmaps/
 !sistema-estudo/roadmaps/apofp-2026/
 !sistema-estudo/roadmaps/apofp-2026/roadmap.json
-!sistema-estudo/roadmaps/apofp-2026/vinculacao/
-!sistema-estudo/roadmaps/apofp-2026/vinculacao/vinculos.jsonl
-!sistema-estudo/roadmaps/apofp-2026/vinculacao/relatorio.json
-!base-questoes/
-!base-questoes/dados/
-!base-questoes/dados/conteudo.sqlite
-!biblioteca-concursos/
-!biblioteca-concursos/**
+!sistema-estudo/catalogo/
+!sistema-estudo/catalogo/**
+!sistema-estudo/estudo/
+!sistema-estudo/estudo/*.py
+**/__pycache__/
+**/*.pyc

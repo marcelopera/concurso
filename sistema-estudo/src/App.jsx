@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Excalidraw } from "@excalidraw/excalidraw";
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+const Excalidraw = lazy(() => import("@excalidraw/excalidraw").then((module) => ({ default: module.Excalidraw })));
 import { api, profileHeaders, selectProfile } from "./api";
 import ProfileBox, { ResetRoadmap } from "./ProfileBox";
 import RoadmapPlan, { SyllabusDetails } from "./RoadmapPlan";
@@ -287,7 +287,7 @@ function ExcalScene({ scene, onChange, readOnly = false, theme = "light", label 
     if (onChangeRef.current) onChangeRef.current({ elements, appState: serializableAppState(appState), files: files || {} });
   }, [fitReadOnlyScene]);
   return <div className={"excal-container" + (readOnly ? " read-only" : "")} aria-label={label}>
-    <Excalidraw initialData={initialData} onChange={changed} excalidrawAPI={readOnly ? receiveExcalidrawAPI : undefined} viewModeEnabled={readOnly} theme={theme} langCode="pt-BR" />
+    <Suspense fallback={<p>Carregando quadro…</p>}><Excalidraw initialData={initialData} onChange={changed} excalidrawAPI={readOnly ? receiveExcalidrawAPI : undefined} viewModeEnabled={readOnly} theme={theme} langCode="pt-BR" /></Suspense>
   </div>;
 }
 

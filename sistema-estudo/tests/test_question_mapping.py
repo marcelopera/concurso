@@ -20,11 +20,22 @@ import question_links
 from question_mapping_rules import normalize
 
 
+def has_original_catalog():
+    if not map_questions.CONTENT.is_file():
+        return False
+    with contextlib.closing(sqlite3.connect(map_questions.CONTENT)) as con:
+        return bool(con.execute("SELECT 1 FROM ocorrencias WHERE ocorrencia_id=?", ('o_60e4d767a7a99ef8d561751d',)).fetchone())
+
+
+@unittest.skipUnless(has_original_catalog(), 'Catálogo privado original não disponível')
 class MappingTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original_db,cls.original_port=server.STUDY_DB,server.PORT
         cls.source_hash=hashlib.sha256(map_questions.CONTENT.read_bytes()).hexdigest()
+        cls.original_output = map_questions.OUTPUT
+        cls.output_temp = tempfile.TemporaryDirectory()
+        map_questions.OUTPUT = Path(cls.output_temp.name)
         cls.questions,cls.links,cls.report=map_questions.build()
         cls.by_id={q['ocorrencia_id']:q for q in cls.questions}
         cls.temp=tempfile.TemporaryDirectory(dir=Path(__file__).parent)
@@ -48,6 +59,8 @@ class MappingTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.http.shutdown();cls.http.server_close();cls.thread.join()
         server.STUDY_DB,server.PORT=cls.original_db,cls.original_port
+        map_questions.OUTPUT = cls.original_output
+        cls.output_temp.cleanup()
         assert hashlib.sha256(map_questions.CONTENT.read_bytes()).hexdigest()==cls.source_hash
         gc.collect();cls.temp.cleanup()
 

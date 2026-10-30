@@ -134,8 +134,10 @@ def install(db_path):
                              unit['source_url']+'#page='+str(page),0,now))
         con.commit()
         count = con.execute('SELECT count(*) FROM plan_units WHERE plan_id=?',(plan['id'],)).fetchone()[0]
-        assert count==plan['coverage']['lessons']
-        assert con.execute('PRAGMA foreign_key_check').fetchall()==[]
+        if count != plan['coverage']['lessons']:
+            raise RuntimeError('O plano importado não contém a quantidade esperada de aulas.')
+        if con.execute('PRAGMA foreign_key_check').fetchall():
+            raise RuntimeError('O plano importado contém referências inválidas.')
         print(json.dumps(dict(plan=plan['id'],lessons=count,added=con.execute('SELECT count(*) FROM lessons').fetchone()[0]-before,
                               backup=str(backup)),ensure_ascii=False))
 

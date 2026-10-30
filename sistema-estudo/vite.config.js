@@ -21,6 +21,24 @@ function selfHostExcalidrawFonts() {
 
 export default defineConfig({
   base: "/",
+  server: {
+    host: "127.0.0.1",
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8765",
+        changeOrigin: true,
+        configure(proxy) {
+          proxy.on("proxyReq", (request, incoming) => {
+            if (incoming.headers.origin === "http://127.0.0.1:5173") {
+              request.setHeader("Origin", "http://127.0.0.1:8765");
+            }
+          });
+        },
+      },
+    },
+  },
   build: { sourcemap: false, emptyOutDir: true },
   plugins: [selfHostExcalidrawFonts()],
 });

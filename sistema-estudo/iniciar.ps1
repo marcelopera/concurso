@@ -2,7 +2,7 @@ param([switch]$Stop)
 
 $ErrorActionPreference = 'Stop'
 $appRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pythonExe = 'C:\Users\marce\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+$pythonExe = (Get-Command python -ErrorAction Stop).Source
 $port = 8765
 $appUrl = "http://127.0.0.1:$port"
 $healthUrl = "$appUrl/api/health"
@@ -35,7 +35,7 @@ if ($Stop) {
 function Test-StudyServer {
     try {
         $health = Invoke-RestMethod -Uri $healthUrl -TimeoutSec 1 -Method Get
-        return [bool]$health.ok -and [int]$health.content_occurrences -gt 0
+        return [bool]$health.ok
     } catch {
         return $false
     }
@@ -47,7 +47,7 @@ if (Test-StudyServer) {
     exit 0
 }
 if (-not (Test-Path -LiteralPath $pythonExe)) {
-    throw "Python do runtime não encontrado: $pythonExe"
+    throw "Python não encontrado: $pythonExe"
 }
 if (-not (Test-Path -LiteralPath $serverScript)) {
     throw "Servidor não encontrado: $serverScript"
