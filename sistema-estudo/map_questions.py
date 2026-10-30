@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sqlite3
 from collections import Counter, defaultdict
@@ -16,15 +15,16 @@ from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 
+from estudo.config import CONTENT_DB, STUDY_DB
 from estudo.db.migrations import migrate
 from question_mapping_rules import COMPILED, language_question, normalize
 
 ROOT = Path(__file__).resolve().parent
 
-CONTENT = Path(os.environ.get("ESTUDO_CONTENT_DB", ROOT / "dados" / "conteudo.sqlite"))
-STUDY = ROOT / "dados" / "estudo.sqlite"
+CONTENT = CONTENT_DB
+STUDY = STUDY_DB
 PLAN = ROOT / "roadmaps" / "apofp-2026" / "roadmap.json"
-OUTPUT = ROOT / "dados" / "vinculacao"
+OUTPUT = STUDY.parent / "vinculacao"
 METHOD = "regras-tematicas-evidencia-v1"
 
 # Exact occurrence overrides are written only after reading the item. A list of
@@ -406,6 +406,8 @@ def build():
 
 def apply_links(links, report, db_path=STUDY):
     db_path = Path(db_path).resolve()
+    if not db_path.is_file():
+        raise FileNotFoundError(f"Banco de progresso não encontrado: {db_path}")
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     backup = db_path.with_name("estudo-antes-vinculacao-" + stamp + ".sqlite")
     run_id = "mapping_" + stamp
@@ -426,6 +428,7 @@ def apply_links(links, report, db_path=STUDY):
                                JOIN plan_units u USING(lesson_id) WHERE u.plan_id=?""",
             (report["plan_id"],),
         ).fetchall()
+        managed_pairs = {tuple(pair) for pair in managed}
         stale = [pair for pair in managed if tuple(pair) not in wanted]
         # Reclassification replaces only obsolete generated correspondences.
         # Manual selections have no row in this provenance table and survive.
@@ -443,7 +446,7 @@ def apply_links(links, report, db_path=STUDY):
                 lesson["lesson_id"],
                 not lesson["correctable"],
                 lesson["bank"] != "FCC",
-                -int(lesson["contest"][:4]),
+                -int(match.group()) if (match := re.match(r"\d{4}", lesson["contest"] or "")) else 0,
                 -lesson["score"],
                 lesson["occurrence_id"],
             ),
@@ -456,6 +459,9 @@ def apply_links(links, report, db_path=STUDY):
             )
             if cursor.rowcount:
                 position[lid] = position.get(lid, 0) + 1
+            elif (lid, lesson["occurrence_id"]) not in managed_pairs:
+                # A pre-existing manual link must never become managed by the mapper.
+                continue
             con.execute(
                 """INSERT INTO lesson_question_mappings VALUES(?,?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(lesson_id,occurrence_id) DO UPDATE SET relation=excluded.relation,
@@ -490,6 +496,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
+    if args.apply:
+        with closing(sqlite3.connect(f"{CONTENT.resolve().as_uri()}?mode=ro", uri=True)) as catalog:
+            has_meta = catalog.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='schema_meta'"
+            ).fetchone()
+            columns = {row[1] for row in catalog.execute("PRAGMA table_info(schema_meta)")} if has_meta else set()
+            if (
+                "origem" in columns
+                and catalog.execute("SELECT 1 FROM schema_meta WHERE origem='demonstracao sintetica'").fetchone()
+            ):
+                parser.error(
+                    "O catálogo de demonstração não possui questões relativas ao plano; selecione-as manualmente."
+                )
     questions, links, report = build()
     print(json.dumps({k: v for k, v in report.items() if k != "lessons"}, ensure_ascii=False, indent=2))
     if args.apply:
