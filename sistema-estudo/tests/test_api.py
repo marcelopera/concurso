@@ -163,6 +163,27 @@ class ApiTests(unittest.TestCase):
         with server.study_db() as con:
             self.assertEqual(con.execute("SELECT count(*) FROM card_reviews").fetchone()[0], 4)
 
+    def test_new_session_restores_latest_completed_lesson_board(self):
+        session = self.start()
+        scene = {"elements": [{"id": "drawing", "type": "rectangle"}], "appState": {}, "files": {}}
+        payload = {"boardScene": scene, "recallText": "Não copiar outras respostas"}
+        self.assertEqual(self.request(f"/api/sessions/{session}/state", "PUT", {"payload": payload})[0], 200)
+        _, resumed, _ = self.request("/api/lessons/lesson/sessions", "POST", {})
+        self.assertEqual(resumed["payload"]["boardScene"], scene)
+        self.assertEqual(self.request(f"/api/sessions/{session}/complete", "POST", {})[0], 200)
+
+        status, reopened, _ = self.request("/api/lessons/lesson/sessions", "POST", {})
+        self.assertEqual(status, 201)
+        self.assertEqual(reopened["payload"]["boardScene"], scene)
+        self.assertNotIn("recallText", reopened["payload"])
+
+        empty = {"elements": [], "appState": {}, "files": {}}
+        new_id = reopened["session_id"]
+        self.request(f"/api/sessions/{new_id}/state", "PUT", {"payload": {"boardScene": empty}})
+        self.request(f"/api/sessions/{new_id}/complete", "POST", {})
+        _, reopened_again, _ = self.request("/api/lessons/lesson/sessions", "POST", {})
+        self.assertEqual(reopened_again["payload"]["boardScene"], empty)
+
     def test_errors_are_consistent_and_unknown_api_paths_are_not_html(self):
         self.assertEqual(self.request("/api/missing")[0], 404)
         status, _, headers = self.request("/api/catalog", "DELETE")

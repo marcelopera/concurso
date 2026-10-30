@@ -3,6 +3,10 @@ export function createSaveQueue(save, onStatus) {
   let chain = Promise.resolve();
   let version = 0;
   return {
+    markDirty() {
+      version++;
+      onStatus("saving");
+    },
     enqueue(value) {
       const current = ++version;
       onStatus("saving");

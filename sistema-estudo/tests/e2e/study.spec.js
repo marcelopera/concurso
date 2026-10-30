@@ -45,6 +45,41 @@ test('quadro carrega sob demanda usando somente recursos locais', async ({ page,
   expect(external).toEqual([]);
 });
 
+test('desenho permanece ao retomar e ao iniciar outra sessão da aula', async ({ page, request }) => {
+  const profile = await (await request.post('/api/profiles', { data: { name: 'Persistência do quadro' } })).json();
+  const headers = { 'X-Study-Profile': profile.id };
+  const session = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
+  await request.post(`/api/sessions/${session.session_id}/step`, { headers, data: { step: 3 } });
+  await page.addInitScript((id) => localStorage.setItem('study-profile', id), profile.id);
+  await page.goto('/');
+  const canvas = page.locator('.excalidraw canvas').first();
+  await expect(canvas).toBeVisible();
+  const rectangle = page.getByRole('radio', { name: 'Retângulo' });
+  await page.locator('label').filter({ has: rectangle }).click();
+  await expect(rectangle).toBeChecked();
+  await canvas.scrollIntoViewIfNeeded();
+  const box = await canvas.boundingBox();
+  await page.mouse.move(box.x + 200, box.y + 160);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 350, box.y + 240, { steps: 10 });
+  await page.mouse.up();
+  await page.getByRole('button', { name: 'Salvar e sair da sessão' }).click();
+  let resumed = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
+  expect(resumed.payload.boardScene.elements.filter((element) => !element.isDeleted)).toHaveLength(1);
+  await page.reload();
+  await expect(canvas).toBeVisible();
+  await page.getByRole('button', { name: 'Salvar e sair da sessão' }).click();
+  await request.post(`/api/sessions/${session.session_id}/complete`, { headers, data: {} });
+  const next = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
+  expect(next.payload.boardScene.elements.filter((element) => !element.isDeleted)).toHaveLength(1);
+  await request.post(`/api/sessions/${next.session_id}/step`, { headers, data: { step: 3 } });
+  await page.reload();
+  await expect(canvas).toBeVisible();
+  await page.getByRole('button', { name: 'Salvar e sair da sessão' }).click();
+  resumed = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
+  expect(resumed.payload.boardScene.elements.filter((element) => !element.isDeleted)).toHaveLength(1);
+});
+
 test('plano externo pode omitir fontes, marcos e regras específicas de prova', async ({ page, request }) => {
   const profile = await (await request.post('/api/profiles', { data: { name: 'Plano externo' } })).json();
   await page.addInitScript((id) => localStorage.setItem('study-profile', id), profile.id);
