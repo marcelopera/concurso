@@ -33,6 +33,20 @@ def current_commit(source_file: Path) -> str:
         if not (candidate / ".git").exists():
             continue
         try:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(candidate),
+                    "ls-files",
+                    "--error-unmatch",
+                    "--",
+                    Path(source_file).resolve().relative_to(candidate).as_posix(),
+                ],
+                check=True,
+                capture_output=True,
+                timeout=3,
+            )
             status = subprocess.run(
                 ["git", "-C", str(candidate), "status", "--porcelain"],
                 check=True,
