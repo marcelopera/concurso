@@ -54,11 +54,14 @@ test('desenho permanece ao retomar e ao iniciar outra sessão da aula', async ({
   await page.goto('/');
   const canvas = page.locator('.excalidraw canvas').first();
   await expect(canvas).toBeVisible();
-  await page.keyboard.press('r');
+  const rectangle = page.getByRole('radio', { name: 'Retângulo' });
+  await page.locator('label').filter({ has: rectangle }).click();
+  await expect(rectangle).toBeChecked();
+  await canvas.scrollIntoViewIfNeeded();
   const box = await canvas.boundingBox();
-  await page.mouse.move(box.x + 200, box.y + 180);
+  await page.mouse.move(box.x + 200, box.y + 160);
   await page.mouse.down();
-  await page.mouse.move(box.x + 350, box.y + 280, { steps: 10 });
+  await page.mouse.move(box.x + 350, box.y + 240, { steps: 10 });
   await page.mouse.up();
   await page.getByRole('button', { name: 'Salvar e sair da sessão' }).click();
   let resumed = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
