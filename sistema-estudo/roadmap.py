@@ -134,9 +134,12 @@ def install(db_path, plan_file=None):
         for subject in plan["subjects"]:
             sid = subject["subject_id"]
             con.execute("INSERT OR IGNORE INTO subjects VALUES(?,?,?)", (sid, subject["name"], now))
-            actual_sid = con.execute(
+            actual_subject = con.execute(
                 "SELECT subject_id FROM subjects WHERE name=? COLLATE NOCASE", (subject["name"],)
-            ).fetchone()[0]
+            ).fetchone()
+            if actual_subject is None:
+                raise ValueError("O identificador da disciplina já pertence a outro nome.")
+            actual_sid = actual_subject[0]
             topics = {}
             for unit in subject["lessons"]:
                 topic_key = unit["topic_id"]
@@ -145,9 +148,12 @@ def install(db_path, plan_file=None):
                         "INSERT OR IGNORE INTO topics VALUES(?,?,?,?,?)",
                         (topic_key, actual_sid, unit["topic"], len(topics), now),
                     )
-                    topics[topic_key] = con.execute(
+                    actual_topic = con.execute(
                         "SELECT topic_id FROM topics WHERE subject_id=? AND title=?", (actual_sid, unit["topic"])
-                    ).fetchone()[0]
+                    ).fetchone()
+                    if actual_topic is None:
+                        raise ValueError("O identificador do tópico já pertence a outra disciplina ou título.")
+                    topics[topic_key] = actual_topic[0]
                 owner = con.execute(
                     "SELECT plan_id FROM plan_units WHERE lesson_id=? AND plan_id<>?", (unit["lesson_id"], plan["id"])
                 ).fetchone()
@@ -156,6 +162,12 @@ def install(db_path, plan_file=None):
                 ).fetchone()
                 if owner or (current_lesson and current_lesson[0] != topics[topic_key]):
                     raise ValueError("O identificador de uma aula já pertence a outro plano ou tópico.")
+                metadata = con.execute(
+                    "SELECT metadata_json FROM plan_units WHERE plan_id=? AND lesson_id=?",
+                    (plan["id"], unit["lesson_id"]),
+                ).fetchone()
+                if metadata and json.loads(metadata[0]) != unit:
+                    raise ValueError("Os metadados desta aula mudaram. Use um novo identificador de plano.")
                 con.execute(
                     "INSERT OR IGNORE INTO lessons(lesson_id,topic_id,title,created_at) VALUES(?,?,?,?)",
                     (unit["lesson_id"], topics[topic_key], unit["title"], now),

@@ -1,5 +1,4 @@
 import contextlib
-import copy
 import io
 import json
 import sys
@@ -21,18 +20,34 @@ class PlanPackTests(unittest.TestCase):
         self.database = self.root / "study.sqlite"
         with open_study(self.database) as con:
             migrate(con)
-        self.plan = copy.deepcopy(json.loads(roadmap.PLAN_FILE.read_text(encoding="utf-8")))
-        self.plan["id"] = "custom-plan"
-        subject = self.plan["subjects"][0]
-        subject["subject_id"], subject["name"] = "custom-subject", "Minha disciplina"
-        unit = subject["lessons"][0]
-        unit["lesson_id"], unit["topic_id"] = "custom-lesson", "custom-topic"
-        subject["lessons"] = [unit]
-        self.plan["subjects"] = [subject]
-        day = self.plan["days"][0]
-        day["lessons"], day["review_lesson_ids"] = ["custom-lesson"], []
-        self.plan["days"] = [day]
-        self.plan["coverage"]["lessons"] = 1
+        self.plan = {
+            "id": "custom-plan",
+            "title": "Meu plano",
+            "area": "Estudos",
+            "strategy": "Revisar os conteúdos.",
+            "daily_minutes": 60,
+            "exam_date": "2030-02-01",
+            "coverage_deadline": "2030-01-02",
+            "subjects": [
+                {
+                    "subject_id": "custom-subject",
+                    "name": "Minha disciplina",
+                    "lessons": [
+                        {
+                            "lesson_id": "custom-lesson",
+                            "topic_id": "custom-topic",
+                            "topic": "Meu tópico",
+                            "title": "Minha aula",
+                            "exam": "P1",
+                            "scheduled_date": "2030-01-01",
+                            "minutes": 60,
+                        }
+                    ],
+                }
+            ],
+            "days": [{"date": "2030-01-01", "phase": "Estudo", "lessons": ["custom-lesson"], "activities": []}],
+            "coverage": {"lessons": 1},
+        }
         self.file = self.root / "plan.json"
 
     def install(self):
@@ -49,6 +64,9 @@ class PlanPackTests(unittest.TestCase):
             self.assertEqual(con.execute("SELECT count(*) FROM lessons").fetchone()[0], 1)
             self.assertEqual(con.execute("SELECT completed_at FROM lessons").fetchone()[0], "preserved")
             self.assertEqual(con.execute("PRAGMA foreign_key_check").fetchall(), [])
+            public = roadmap.public_plan(con, "2030-01-01")
+            self.assertEqual(public["title"], "Meu plano")
+            self.assertEqual(public["stats"]["completed"], 1)
         self.assertTrue(list(self.root.glob("estudo-antes-roadmap-*.sqlite")))
 
     def test_invalid_plan_and_changed_configuration_do_not_modify_progress(self):
@@ -60,6 +78,14 @@ class PlanPackTests(unittest.TestCase):
         self.assertEqual(self.database.read_bytes(), original)
         self.plan["coverage"]["lessons"] = 1
         self.plan["title"] = "Changed configuration"
+        with self.assertRaises(ValueError):
+            self.install()
+        self.assertEqual(self.database.read_bytes(), original)
+
+    def test_changed_lesson_metadata_requires_a_new_plan_id(self):
+        self.install()
+        original = self.database.read_bytes()
+        self.plan["subjects"][0]["lessons"][0]["title"] = "Outro conteúdo"
         with self.assertRaises(ValueError):
             self.install()
         self.assertEqual(self.database.read_bytes(), original)

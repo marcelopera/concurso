@@ -61,12 +61,14 @@ export default function RoadmapPlan({ plan, onOpenLesson, onStart, onRefresh }) 
       return <button className={'calendar-day' + (d.date === selected ? ' selected' : '')} key={d.date} onClick={() => { setSelected(d.date); document.querySelector('.daily-plan')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}><strong>{formatDay(d.date, true)}</strong><span>{d.lessons.length ? d.lessons.map((u) => u.subject_name.replace('A01 · ', '')).join(' · ') : d.phase}</span><span>{done}/{total} etapas</span></button>;
     })}</div>)}</details>
     <details className="card plan-reference"><summary>Estratégia de prova, marcos e fontes oficiais</summary>
-      <p>P1: 80 questões, até 112 pontos. P2: 40 questões A01 × peso 3, até 120 pontos. P3: 1 estudo de caso sobre conhecimentos básicos, até 30 linhas e 120 pontos. P1: 4h pela manhã; P2 e P3 compartilham 4h à tarde.</p>
-      <p>Mínimos cumulativos: P1 ≥ 45, P2 ≥ 48, P3 ≥ 48 e P1 + P2 ≥ 116. A correção da discursiva também depende da classificação prevista no edital. Meta de treino sugerida: 75% ou mais nas objetivas, com correção dos erros; essa meta não equivale a nota de corte.</p>
-      <p>Nos simulados, selecione os itens da biblioteca ou do catálogo por assunto. Priorize FCC quando houver questões pertinentes e complemente com outras bancas. Os blocos de prática incluem seleção e correção. Os vínculos por aula continuam explícitos.</p>
-      <p>Os dois simulados de 8h foram distribuídos em dois dias de 4h, em 21–22/11 e 12–13/12. A data da prova está prevista na retificação 02/2026; confira eventuais novas publicações.</p>
-      <ul>{plan.milestones.map((m) => <li key={m.date}><strong>{formatDay(m.date)}/{m.date.slice(0, 4)}</strong> · {m.title}</li>)}</ul>
-      <div className="source-list">{plan.sources.map((source) => <a href={source.url} key={source.file} target="_blank" rel="noreferrer">{source.title} ↗</a>)}</div><p className="muted">Fontes conferidas em {formatDay(plan.sources_checked)}/2026. Os agrupamentos e metas de estudo são sugestões; o texto associado a cada aula vem do Anexo II.</p>
+      {plan.scoring && <>
+        <p>P1: {plan.scoring.p1_questions} questões, até {plan.scoring.p1_max} pontos. P2: {plan.scoring.p2_questions} questões, até {plan.scoring.p2_max} pontos. P3: até {plan.scoring.p3_lines} linhas e {plan.scoring.p3_max} pontos.</p>
+        <p>Mínimos cumulativos: P1 ≥ {plan.scoring.p1_min}, P2 ≥ {plan.scoring.p2_min}, P3 ≥ {plan.scoring.p3_min} e P1 + P2 ≥ {plan.scoring.objective_min}. Confira os critérios completos nas fontes do plano.</p>
+      </>}
+      {(plan.exam_guidance || []).map((text, index) => <p key={index}>{text}</p>)}
+      <ul>{(plan.milestones || []).map((m) => <li key={m.date}><strong>{formatDay(m.date)}/{m.date.slice(0, 4)}</strong> · {m.title}</li>)}</ul>
+      <div className="source-list">{(plan.sources || []).map((source) => <a href={source.url} key={source.file || source.url} target="_blank" rel="noreferrer">{source.title} ↗</a>)}</div>
+      {plan.sources_checked && <p className="muted">Fontes conferidas em {formatDay(plan.sources_checked)}/{plan.sources_checked.slice(0, 4)}. Os agrupamentos e metas de estudo são sugestões.</p>}
     </details>
   </>;
 }

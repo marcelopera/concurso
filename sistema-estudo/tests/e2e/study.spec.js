@@ -44,3 +44,21 @@ test('quadro carrega sob demanda usando somente recursos locais', async ({ page,
   await page.evaluate(() => document.fonts.ready);
   expect(external).toEqual([]);
 });
+
+test('plano externo pode omitir fontes, marcos e regras específicas de prova', async ({ page, request }) => {
+  const profile = await (await request.post('/api/profiles', { data: { name: 'Plano externo' } })).json();
+  await page.addInitScript((id) => localStorage.setItem('study-profile', id), profile.id);
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.route('**/api/bootstrap', async (route) => {
+    const response = await route.fetch();
+    const body = await response.json();
+    body.roadmap.title = 'Meu plano externo';
+    for (const key of ['sources', 'sources_checked', 'milestones', 'scoring', 'board']) delete body.roadmap[key];
+    await route.fulfill({ response, json: body });
+  });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Roadmap · Meu plano externo' })).toBeVisible();
+  await page.getByText('Estratégia de prova, marcos e fontes oficiais', { exact: true }).click();
+  expect(errors).toEqual([]);
+});
