@@ -9,7 +9,7 @@ import jsonschema
 from concurso_contracts.catalog.contrato import CATALOG_VERSION, hash_sources, serialize_sources, validate_catalog
 
 from ..common import norm, question_text, readjl, relative_file
-from ..config import canonical_source_hashes, config, resource_file
+from ..config import catalog_source_hashes, config, resource_file
 
 SCHEMAS = {"questoes": "question", "topicos": "topic", "gabaritos": "answer"}
 
@@ -45,9 +45,11 @@ def main():
             raise ValueError("Versão do catálogo inválida.")
         validate_catalog(db)
         stored_sources = db.execute("SELECT hash_fontes, fontes_json FROM schema_meta").fetchone()
-        current_sources = canonical_source_hashes(settings)
+        current_sources = catalog_source_hashes(settings)
         if stored_sources != (hash_sources(current_sources), serialize_sources(current_sources)):
-            raise ValueError("O catálogo não corresponde às fontes canônicas e ao manifesto atuais.")
+            raise ValueError(
+                "O catálogo diverge das fontes canônicas, do manifesto ou dos metadados atuais da execução."
+            )
         if (
             db.execute("PRAGMA integrity_check").fetchone()[0] != "ok"
             or db.execute("PRAGMA foreign_key_check").fetchall()

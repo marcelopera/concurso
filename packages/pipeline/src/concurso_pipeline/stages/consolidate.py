@@ -9,7 +9,7 @@ from contextlib import closing
 from concurso_contracts.catalog.contrato import CATALOG_VERSION, hash_sources, serialize_sources
 
 from ..common import ident, js, norm, question_text, readjl, unaccent, writejl
-from ..config import canonical_source_hashes, config, execution_metadata, resource_file
+from ..config import catalog_source_hashes, config, execution_metadata, resource_file
 from .validate import validate_records
 
 
@@ -118,7 +118,7 @@ def main():
     None
     docs = json.loads((config().canonical / "documentos.json").read_text(encoding="utf-8"))
     execution = execution_metadata(config())
-    source_hashes = canonical_source_hashes(config())
+    source_hashes = catalog_source_hashes(config())
     source_hash = hash_sources(source_hashes)
     sources_json = serialize_sources(source_hashes)
     for kind in ("questoes", "topicos", "gabaritos"):

@@ -87,12 +87,22 @@ def execution_metadata(settings: Settings) -> dict:
     except json.JSONDecodeError as exc:
         raise ValueError("Metadados da execução inválidos; o arquivo execucao.json não foi alterado.") from exc
 
+    generated_at = metadata.get("gerado_em") if isinstance(metadata, dict) else None
+    try:
+        parsed_generated_at = datetime.fromisoformat(generated_at.replace("Z", "+00:00"))
+        valid_generated_at = (
+            parsed_generated_at.tzinfo is not None
+            and parsed_generated_at.utcoffset() == timezone.utc.utcoffset(parsed_generated_at)
+        )
+    except (AttributeError, ValueError):
+        valid_generated_at = False
+
     if (
         not isinstance(metadata, dict)
         or metadata.get("execucao_id") != settings.run_id
         or metadata.get("origem") != "concurso_pipeline"
         or metadata.get("proveniencia") not in {"desconhecida", "sintetica", "registrada"}
-        or not isinstance(metadata.get("gerado_em"), str)
+        or not valid_generated_at
         or not isinstance(metadata.get("commit_execucao"), str)
         or not re.fullmatch(r"(?:desconhecido|[0-9a-f]{40}|[0-9a-f]{64})", metadata["commit_execucao"])
     ):
@@ -102,12 +112,15 @@ def execution_metadata(settings: Settings) -> dict:
     return {**metadata, "commit_origem": current_commit(Path(__file__))}
 
 
-def canonical_source_hashes(settings: Settings) -> dict[str, str]:
-    """Hash the canonical snapshot and its raw manifest when one is present."""
-    paths = {
-        f"canonical/{name}": settings.canonical / name
-        for name in ("documentos.json", "questoes.jsonl", "topicos.jsonl", "gabaritos.jsonl")
-    }
+def catalog_source_hashes(settings: Settings) -> dict[str, str]:
+    """Hash stable execution metadata, the canonical snapshot and any raw manifest."""
+    paths = {"execucao.json": settings.run_dir / "execucao.json"}
+    paths.update(
+        {
+            f"canonical/{name}": settings.canonical / name
+            for name in ("documentos.json", "questoes.jsonl", "topicos.jsonl", "gabaritos.jsonl")
+        }
+    )
     manifest = settings.run_dir / "MANIFEST.raw.json"
     if manifest.is_file():
         paths["MANIFEST.raw.json"] = manifest

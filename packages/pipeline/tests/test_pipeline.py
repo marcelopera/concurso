@@ -15,7 +15,7 @@ from pathlib import Path
 from concurso_contracts.catalog.contrato import hash_sources
 from concurso_pipeline.__main__ import run
 from concurso_pipeline.common import expected_count, ident, js, norm, readjl, writejl
-from concurso_pipeline.config import Settings, canonical_source_hashes, execution, source_file
+from concurso_pipeline.config import Settings, catalog_source_hashes, execution, source_file
 from concurso_pipeline.stages.review import documents
 from concurso_pipeline.stages.validate import validate_records
 from tools.dataset_manifest import verify
@@ -114,7 +114,7 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(datetime.fromisoformat(metadata[3]).utcoffset().total_seconds(), 0)
             self.assertRegex(metadata[4], r"^(?:desconhecido|[0-9a-f]{40}|[0-9a-f]{64})$")
             sources = json.loads(metadata[6])
-            self.assertEqual(sources, canonical_source_hashes(self.settings))
+            self.assertEqual(sources, catalog_source_hashes(self.settings))
             self.assertEqual(metadata[5], hash_sources(sources))
             execution_metadata = json.loads(db.execute("SELECT metadados_json FROM execucoes").fetchone()[0])
             self.assertEqual(execution_metadata["execucao_id"], self.settings.run_id)
@@ -147,6 +147,21 @@ class PipelineTests(unittest.TestCase):
             new_hash, rebuilt_start = db.execute("SELECT hash_fontes, gerado_em FROM schema_meta").fetchone()
         self.assertNotEqual(new_hash, old_hash)
         self.assertEqual(rebuilt_start, started_at)
+
+    def test_catalog_detects_changed_execution_metadata(self):
+        self.stage("review")
+        self.stage("build")
+        execution_file = self.settings.run_dir / "execucao.json"
+        metadata = json.loads(execution_file.read_text(encoding="utf-8"))
+        metadata["gerado_em"] = "data inválida"
+        execution_file.write_text(js(metadata), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Metadados da execução inválidos"):
+            self.stage("validate")
+
+        metadata["gerado_em"] = "2000-01-01T00:00:00+00:00"
+        execution_file.write_text(js(metadata), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "fontes canônicas"):
+            self.stage("validate")
 
     def test_cli_runs_from_another_directory_with_explicit_paths(self):
         self.stage("review")
