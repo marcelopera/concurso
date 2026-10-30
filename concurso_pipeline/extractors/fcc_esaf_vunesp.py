@@ -10,7 +10,7 @@ from collections import Counter
 
 import pdfplumber
 
-from ..common import clean, expected_count
+from ..common import clean, expected_count, write_selected_batch
 from ..config import config, load_documents, source_file
 
 AGENT = "fleet-luna-fcc-esaf-vunesp"
@@ -251,9 +251,9 @@ def main():
             }
         )
     (config().run_dir / "lotes" / "fcc_esaf_vunesp.questoes.jsonl").parent.mkdir(parents=True, exist_ok=True)
-    with (config().run_dir / "lotes" / "fcc_esaf_vunesp.questoes.jsonl").open("w", encoding="utf-8", newline="\n") as f:
-        for row in rows:
-            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    write_selected_batch(
+        config().run_dir / "lotes" / "fcc_esaf_vunesp.questoes.jsonl", rows, [d["documento_id"] for d in docs]
+    )
     report = {
         "grupo": "fcc_esaf_vunesp",
         "agente": AGENT,

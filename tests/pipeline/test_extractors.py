@@ -88,7 +88,14 @@ class ExtractorGoldenTests(unittest.TestCase):
             original = other.read_bytes()
             with redirect_stdout(StringIO()):
                 run("extract", settings, ["FCC"])
+                run("extract", settings, ["Fundatec"])
+                run("review", settings, list(expected))
+                run("build", settings, list(expected))
             self.assertEqual(other.read_bytes(), original)
+            self.assertEqual(
+                {r["ocorrencia_id"] for r in readjl(settings.output_dir / "questoes.jsonl")},
+                {r["ocorrencia_id"] for r in records},
+            )
 
 
 if __name__ == "__main__":

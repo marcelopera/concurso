@@ -6,7 +6,7 @@ from collections import Counter
 
 import pdfplumber
 
-from ..common import clean
+from ..common import clean, write_selected_batch
 from ..config import config, load_documents, source_file
 
 METHOD = "pdfplumber com coordenadas; segmentação por marcadores impressos e regras de formato. Classificações temáticas são inferências heurísticas por evidência lexical contextual; habilidades não preenchidas automaticamente."
@@ -462,7 +462,7 @@ def main():
         )
         allq.extend(qs)
     outfile = config().run_dir / "lotes" / "cebraspe_fundatec.questoes.jsonl"
-    outfile.write_text("".join((json.dumps(q, ensure_ascii=False) + "\n" for q in allq)), encoding="utf-8")
+    write_selected_batch(outfile, allq, [d["documento_id"] for d in targets])
     report = {"grupo": "cebraspe_fundatec", "metodo": METHOD, "total_questoes": len(allq), "documentos": reports}
     (config().run_dir / "lotes" / "cebraspe_fundatec.relatorio.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
