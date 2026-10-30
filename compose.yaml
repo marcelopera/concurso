@@ -1,31 +1,3 @@
-services:
-  estudo:
-    image: sistema-estudo:local
-    build:
-      context: .
-      dockerfile: sistema-estudo/Dockerfile
-    ports:
-      - "127.0.0.1:${ESTUDO_PORTA:-8765}:${ESTUDO_PORTA:-8765}"
-    environment:
-      ESTUDO_PORT: "${ESTUDO_PORTA:-8765}"
-      BIBLIOTECA_DIR: /app/biblioteca-concursos
-    volumes:
-      - estudo-dados:/app/sistema-estudo/dados
-      - ${BIBLIOTECA_DIR:-./biblioteca-concursos}:/app/biblioteca-concursos:ro
-    restart: unless-stopped
-    read_only: true
-    tmpfs:
-      - /tmp
-    cap_drop:
-      - ALL
-    security_opt:
-      - no-new-privileges:true
-    healthcheck:
-      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('ESTUDO_PORT', '8765') + '/api/health', timeout=5).close()"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-
-volumes:
-  estudo-dados:
+# A entrada na raiz mantém `docker compose up --build` como quickstart.
+include:
+  - deploy/compose.yaml

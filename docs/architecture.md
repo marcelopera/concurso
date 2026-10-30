@@ -1,27 +1,37 @@
 # Arquitetura
 
-O navegador carrega a interface React servida pelo servidor Python local. A API consulta o catálogo SQLite em modo somente leitura; sessões, planos, perfis e revisões são gravados no banco de progresso. PDFs opcionais são lidos de uma biblioteca local restrita. O catálogo padrão é sintético e gerado a partir do esquema versionado. Um catálogo privado pode substituir a demonstração sem sobrescrever o progresso.
+O monorepo separa o pipeline, o backend e o frontend em [packages/](../packages/). Planos externos ficam em [plans/](../plans/), infraestrutura em [deploy/](../deploy/) e dados privados e derivados em `data/`, ignorado pelo Git. A [ADR 0004](adr/0004-package-boundaries.md) registra as fronteiras e a migração.
 
 ```mermaid
-graph LR
-  UI[Interface React] --> API[Servidor local Python]
-  API -->|leitura| C[Catálogo SQLite]
-  API -->|leitura e gravação| P[Progresso SQLite]
-  API -->|leitura| B[Biblioteca de PDFs opcional]
+graph TD
+  UI[Frontend React] --> HTTP[API HTTP]
+  HTTP --> S[Serviços de aplicação]
+  S --> R[Repositórios SQLite]
+  R --> P[Progresso: leitura e gravação]
+  R --> C[Catálogo: somente leitura]
+  S --> B[Biblioteca opcional: leitura]
+  Plans[Planos externos JSON] --> S
+  Pipeline[Pipeline: extract / review / build] --> C
+  Pipeline -. depende .-> Contract[concurso-contracts]
+  R -. depende .-> Contract
 ```
 
-O progresso guarda IDs de ocorrências do catálogo sem chave estrangeira entre bancos. Para manter os vínculos, atualizações do catálogo precisam preservar esses IDs. Faça backup do progresso antes de atualizar ou restaurar dados.
+O [backend](../packages/estudo/backend/) é um pacote instalável com layout `src/estudo/`. [app.py](../packages/estudo/backend/src/estudo/app.py) compõe uma instância `Application`, recebendo [Settings](../packages/estudo/backend/src/estudo/config.py). Cada servidor HTTP recebe essa instância explicitamente; não há ligação a `sys.modules`, configuração global mutável de porta nem imports de módulos soltos na raiz. Os caminhos são resolvidos por execução, a partir do ambiente ou de configurações fornecidas diretamente.
 
-O frontend organiza suas telas em `sistema-estudo/src/features/`, com componentes compartilhados em `src/components/`. A configuração das etapas fica em `estudo/config.py` e é enviada ao navegador por `/api/bootstrap`, de modo que os tempos exibidos e os usados pelo servidor tenham a mesma origem.
+[api/http.py](../packages/estudo/backend/src/estudo/api/http.py) declara as rotas e adapta parâmetros, JSON, status, arquivos e intervalos HTTP. [services/](../packages/estudo/backend/src/estudo/services/) valida e executa os casos de uso de aulas, sessões, correção, revisão espaçada, planos e perfis. [repositories/](../packages/estudo/backend/src/estudo/repositories/) contém SQL e persistência. Os serviços controlam transações; [db/](../packages/estudo/backend/src/estudo/db/) controla conexões, backup e migrações. A escolha de questões para prática fica no serviço de seleção, com prioridade para conteúdos distintos e corrigíveis ainda não respondidos.
 
-O esquema do progresso é atualizado pelas migrações SQL em `estudo/db/migrations/`, em ordem numérica. Cada atualização é transacional, registra a versão em `schema_migrations` e `PRAGMA user_version` e preserva os dados existentes. Acrescente novos arquivos numerados sem alterar migrações já publicadas; versões mais recentes que a aplicação são recusadas. Bancos legados com versão zero recebem a migração inicial sem apagar suas tabelas ou registros.
+Erros de domínio são tratados em um único lugar: validação retorna 400, recursos ausentes 404, conflito SQLite 409 e método inválido 405. Erros internos são registrados e retornam mensagem genérica com status 500. O perfil usa contexto isolado por requisição; o endereço local permitido usa a porta efetiva do servidor. `ESTUDO_QUIET=1` silencia o acesso nos testes.
 
-`server.py` compõe as dependências e mantém funções de compatibilidade para os scripts existentes. `estudo/db/connections.py` controla conexões e fechamento; `catalogo/contrato.py` valida os objetos e colunas do catálogo antes de consultá-lo. `estudo/services/{catalog,lessons,sessions}.py` concentra os casos de uso, incluindo correção, conclusão idempotente e revisão espaçada. `estudo/api/http.py` declara a tabela de rotas e adapta HTTP aos serviços. Erros de validação retornam 400, conflitos SQLite retornam 409, rotas ausentes retornam 404 e métodos incorretos retornam 405; erros internos são registrados e retornam uma mensagem genérica com status 500.
+O [contrato compartilhado](../packages/contracts/) distribui os JSON Schemas, o SQL do catálogo e sua validação, sem depender do backend ou do pipeline. Ambos declaram a mesma versão desse pacote. Recursos são incluídos nos wheels; a produção não procura arquivos em diretórios irmãos do checkout. O backend não importa o pipeline nem suas dependências PDF.
 
-O contexto do perfil é isolado por requisição. O endereço permitido é derivado da porta efetiva do servidor, sem alterar uma variável global. O modo silencioso de testes usa `ESTUDO_QUIET=1`.
+O progresso guarda IDs de ocorrências sem FK entre bancos. O pipeline testa sua estabilidade entre reconsolidações com texto corrigido. Atualizações do catálogo precisam preservar esses IDs; faça backup antes de substituí-lo. As migrações de progresso em [db/migrations/](../packages/estudo/backend/src/estudo/db/migrations/) são numeradas, transacionais e registradas em `schema_migrations` e `PRAGMA user_version`. Migrações publicadas permanecem inalteradas; bancos futuros são recusados e bancos legados recebem o esquema sem perder dados.
 
-No frontend, `useSessionDraft` controla o rascunho, o salvamento com atraso e a saída da página. `saveQueue` serializa gravações e impede que respostas antigas substituam o estado mais recente. Há testes JavaScript específicos para concorrência e recuperação de erro. O Excalidraw continua sob demanda, com versão exata e um transform de build restrito para retirar o fallback remoto de fontes; o build falha se o chunk ou o trecho esperado mudar. O E2E abre o quadro e verifica que os recursos carregados são locais. O motivo dessa adaptação está registrado na [ADR](adr/0001-local-runtime.md).
+O [frontend](../packages/estudo/frontend/) organiza telas em `src/features/{roadmap,session,catalog,library,whiteboard,profiles}/`, componentes em `src/components/` e o cliente HTTP em `src/lib/api.js`. O hook de rascunho e a fila serial de gravação pertencem à funcionalidade de sessão. As etapas vêm de `/api/bootstrap`, usando a definição única do backend. O build gera `data/frontend/`, servido por `ESTUDO_DIST_DIR`.
 
-Planos JSON podem ser importados em runtime, conforme [plan packs](plan-packs.md). O plano incluído é um exemplo padrão; campos de título, área, duração e calendário são exibidos a partir dos dados.
+O Excalidraw carrega sob demanda, com versão exata e fontes locais. Seu transform de build tem guardas para o chunk e o trecho esperado; o E2E abre o quadro e verifica a ausência de chamadas externas. A [ADR 0001](adr/0001-local-runtime.md) documenta a escolha.
 
-O [pipeline](pipeline.md) é um pacote separado do servidor: extratores por banca produzem lotes privados, `review` forma o snapshot JSONL canônico e `build` gera catálogo, CSV, HTML e relatório. Normalização, IO e IDs ficam em `concurso_pipeline/common`. O servidor não executa extrações nem precisa das dependências PDF. O wheel do pipeline inclui os mesmos schemas e SQL versionados usados no checkout.
+O [pipeline](pipeline.md) possui pacote, dependências, CLI e testes próprios. Os módulos de `common/{text,io,paths,ids}.py` têm uma implementação de cada utilitário. `review` produz o snapshot JSONL canônico e `build` gera SQLite, CSV, HTML e relatório. Os lotes privados são preservados separadamente com SHA-256 e proveniência.
+
+Planos são importados em runtime com validação e backup. A imagem não contém planos; Compose monta a coleção externa e instala o plano escolhido apenas em bancos novos. Bancos existentes são migrados no startup, sem repopular nem substituir o progresso. O volume `estudo-dados` conserva os mesmos arquivos; veja a [atualização de instalações locais](../README.md#atualização-e-backup).
+
+[Testes de arquitetura](../tests/test_architecture.py) impedem dependências entre backend e pipeline, SQL em HTTP/serviços e imports dos serviços pelos repositórios. O [smoke de pacotes](../tools/check_packages.py) verifica instalação por wheel fora do checkout. Regressões HTTP verificam também duas aplicações simultâneas com configurações independentes.

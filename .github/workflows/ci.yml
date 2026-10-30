@@ -27,34 +27,35 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 11.25.0
-      - run: python -m pip install -e ".[dev,extract]"
+      - run: python -m pip install -e packages/contracts -e packages/pipeline -e packages/estudo/backend -e ".[dev,extract]"
       - run: pnpm install --frozen-lockfile
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
       - run: python -m ruff check .
       - run: python -m ruff format --check .
       - run: python tools/check_repository.py
-      - run: python -m unittest discover -s tests/pipeline -v
+      - run: python -m unittest discover -s tests -v
+      - run: python tools/check_packages.py
+      - run: python -m unittest discover -s packages/pipeline/tests -v
       - run: pnpm run lint
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
       - run: pnpm test
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
       - run: pnpm run build
-        working-directory: sistema-estudo
-      - run: python tests/run_demo_suite.py
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
+      - run: python packages/estudo/backend/tests/run_demo_suite.py
       - run: pnpm exec playwright install --with-deps chromium
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
       - run: pnpm run test:e2e
-        working-directory: sistema-estudo
+        working-directory: packages/estudo/frontend
         env:
           PYTHON: ${{ steps.python.outputs.python-path }}
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: browser-evidence-${{ matrix.os }}
-          path: sistema-estudo/test-results/
+          path: packages/estudo/frontend/test-results/
       - run: git diff --exit-code
-      - run: docker build -t concurso:test -f sistema-estudo/Dockerfile .
+      - run: docker build -t concurso:test -f deploy/Dockerfile .
         if: runner.os == 'Linux'
       - run: python tools/smoke_container.py
         if: runner.os == 'Linux'

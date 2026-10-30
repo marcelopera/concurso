@@ -7,9 +7,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from concurso_pipeline.common import js
 from concurso_pipeline.config import Settings
 from concurso_pipeline.stages.review import documents
+
+from concurso_pipeline.common import js
 from tools.dataset_manifest import inventory, verify
 
 
