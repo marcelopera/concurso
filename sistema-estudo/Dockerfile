@@ -17,10 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends tzdata \
     && useradd --create-home --uid 10001 estudo
 COPY sistema-estudo/*.py ./
 COPY sistema-estudo/scripts/preparar_container.py ./scripts/
+COPY sistema-estudo/catalogo/ ./catalogo/
+COPY sistema-estudo/estudo/ ./estudo/
 COPY sistema-estudo/roadmaps/apofp-2026/roadmap.json ./roadmaps/apofp-2026/
-COPY sistema-estudo/roadmaps/apofp-2026/vinculacao/vinculos.jsonl sistema-estudo/roadmaps/apofp-2026/vinculacao/relatorio.json ./roadmaps/apofp-2026/vinculacao/
-COPY base-questoes/dados/conteudo.sqlite /app/base-questoes/dados/conteudo.sqlite
-COPY biblioteca-concursos/ /app/biblioteca-concursos/
 COPY --from=frontend /app/dist ./dist
 RUN python scripts/preparar_container.py \
     && chown -R estudo:estudo /app/sistema-estudo/dados

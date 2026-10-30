@@ -1,0 +1,4 @@
+* text=auto
+*.sqlite binary
+*.png binary
+*.jsonl -diff

@@ -11,8 +11,8 @@ import uuid
 import argparse
 from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlsplit
+from pathlib import Path, PureWindowsPath
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 from zoneinfo import ZoneInfo
 import roadmap
 import question_links
@@ -21,15 +21,26 @@ import profiles
 
 APP_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = APP_ROOT.parent
-CONTENT_DB = REPO_ROOT / "base-questoes" / "dados" / "conteudo.sqlite"
-LIBRARY_ROOT = (REPO_ROOT / "biblioteca-concursos").resolve()
+LIBRARY_ROOT = Path(os.environ.get("BIBLIOTECA_DIR", REPO_ROOT / "biblioteca-concursos")).resolve()
 DATA_DIR = APP_ROOT / "dados"
+PRIVATE_CONTENT_DB = DATA_DIR / "conteudo.sqlite"
+DEMO_CONTENT_DB = DATA_DIR / "demo.sqlite"
+CONTENT_DB = Path(os.environ.get("ESTUDO_CONTENT_DB", PRIVATE_CONTENT_DB if PRIVATE_CONTENT_DB.is_file() else DEMO_CONTENT_DB)).resolve()
 STUDY_DB = Path(os.environ.get("ESTUDO_DB", str(DATA_DIR / "estudo.sqlite"))).resolve()
 DIST_ROOT = APP_ROOT / "dist"
 LOCAL_TZ = ZoneInfo("America/Sao_Paulo")
 PORT = int(os.environ.get("ESTUDO_PORT", "8765"))
 MAX_BODY = 22 * 1024 * 1024
 STEP_MINUTES = [10, 5, 20, 10, 15, 3]
+
+
+class ClosingConnection(sqlite3.Connection):
+    """Commit or roll back and release the database when leaving a with block."""
+    def __exit__(self, exc_type, exc, traceback):
+        try:
+            return super().__exit__(exc_type, exc, traceback)
+        finally:
+            self.close()
 
 
 def utc_now() -> datetime:
@@ -46,7 +57,7 @@ def new_id(prefix: str) -> str:
 
 def study_db() -> sqlite3.Connection:
     STUDY_DB.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(profiles.database(STUDY_DB, profiles.current.get()), timeout=15)
+    con = sqlite3.connect(profiles.database(STUDY_DB, profiles.current.get()), timeout=15, factory=ClosingConnection)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
     con.execute("PRAGMA busy_timeout = 15000")
@@ -54,10 +65,17 @@ def study_db() -> sqlite3.Connection:
 
 
 def content_db() -> sqlite3.Connection:
+    if CONTENT_DB == DEMO_CONTENT_DB.resolve() and not CONTENT_DB.exists():
+        from catalogo.criar_demo import criar
+        criar(CONTENT_DB)
     if not CONTENT_DB.is_file():
         raise RuntimeError(f"Banco de conteúdo não encontrado: {CONTENT_DB}")
-    uri = f"file:{CONTENT_DB.as_posix()}?mode=ro"
-    con = sqlite3.connect(uri, uri=True, timeout=10)
+    uri = CONTENT_DB.as_uri() + "?mode=ro"
+    con = sqlite3.connect(uri, uri=True, timeout=10, factory=ClosingConnection)
+    version = con.execute('PRAGMA user_version').fetchone()[0]
+    if version > 1:
+        con.close()
+        raise RuntimeError(f'Catálogo versão {version} não é compatível com esta aplicação.')
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA query_only = ON")
     return con
@@ -65,6 +83,9 @@ def content_db() -> sqlite3.Connection:
 
 def init_db() -> None:
     with study_db() as con:
+        version = con.execute('PRAGMA user_version').fetchone()[0]
+        if version > 1:
+            raise RuntimeError(f'Banco de progresso versão {version} é mais recente que esta aplicação.')
         con.executescript(
             """
             CREATE TABLE IF NOT EXISTS subjects (
@@ -163,6 +184,9 @@ def init_db() -> None:
         )
         roadmap.init_schema(con)
         question_links.init_schema(con)
+        con.execute('CREATE TABLE IF NOT EXISTS schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)')
+        con.execute('INSERT OR IGNORE INTO schema_migrations VALUES (?,?)', (1, iso(utc_now())))
+        con.execute('PRAGMA user_version = 1')
 
 
 def row_dict(row: sqlite3.Row | None) -> dict | None:
@@ -200,7 +224,18 @@ def safe_library_file(path_value: str | None) -> Path | None:
     if not path_value:
         return None
     try:
-        target = Path(path_value).resolve(strict=True)
+        # Accept relative catalog paths and legacy paths rooted at biblioteca-concursos.
+        parts = PureWindowsPath(path_value.replace("/", "\\")).parts
+        markers = [i for i, part in enumerate(parts) if part.lower() == "biblioteca-concursos"]
+        if markers:
+            if len(markers) != 1:
+                return None
+            parts = parts[markers[0] + 1:]
+        elif PureWindowsPath(path_value).is_absolute() or Path(path_value).is_absolute():
+            return None
+        if not parts or any(part in ("..", ".") for part in parts):
+            return None
+        target = LIBRARY_ROOT.joinpath(*parts).resolve(strict=True)
         if not target.is_file() or not target.is_relative_to(LIBRARY_ROOT):
             return None
         if target.suffix.lower() != ".pdf":
@@ -694,13 +729,39 @@ class Handler(BaseHTTPRequestHandler):
                 path = safe_library_file(row["arquivo_local"] if row else None)
                 if path is None:
                     return self._error("PDF não encontrado na biblioteca local.", 404)
-                data = path.read_bytes()
-                name = path.name.replace('"', "")
-                self._headers(200, "application/pdf", len(data), {
-                    "Content-Disposition": f'inline; filename="{name}"',
-                    "Accept-Ranges": "none",
-                })
-                self.wfile.write(data)
+                size = path.stat().st_size
+                start, end = 0, size - 1
+                range_header = self.headers.get("Range")
+                if range_header:
+                    match = re.fullmatch(r"bytes=(\d*)-(\d*)", range_header.strip())
+                    if not match or not any(match.groups()) or size == 0:
+                        self._headers(416, "application/pdf", 0, {"Content-Range": f"bytes */{size}"})
+                        return
+                    first, last = match.groups()
+                    if first:
+                        start = int(first)
+                        end = min(int(last), end) if last else end
+                    else:
+                        suffix = int(last)
+                        start = max(0, size - suffix)
+                    if start >= size or start > end:
+                        self._headers(416, "application/pdf", 0, {"Content-Range": f"bytes */{size}"})
+                        return
+                length = max(0, end - start + 1)
+                headers = {"Content-Disposition": "inline; filename*=UTF-8''" + quote(path.name),
+                           "Accept-Ranges": "bytes"}
+                if range_header:
+                    headers["Content-Range"] = f"bytes {start}-{end}/{size}"
+                self._headers(206 if range_header else 200, "application/pdf", length, headers)
+                with path.open("rb") as source:
+                    source.seek(start)
+                    remaining = length
+                    while remaining:
+                        chunk = source.read(min(64 * 1024, remaining))
+                        if not chunk:
+                            break
+                        self.wfile.write(chunk)
+                        remaining -= len(chunk)
                 return
             if parsed.path == "/api/cards/due":
                 day = datetime.now(LOCAL_TZ).date().isoformat()
@@ -725,8 +786,11 @@ class Handler(BaseHTTPRequestHandler):
                 if lesson is None:
                     return self._error("Aula não encontrada.", 404)
                 return self._json(lesson)
-        except (ValueError, sqlite3.Error, OSError, RuntimeError) as exc:
-            return self._error(str(exc), 500)
+        except ValueError as exc:
+            return self._error(str(exc), 400)
+        except (sqlite3.Error, OSError, RuntimeError) as exc:
+            self.log_error("Erro interno: %r", exc)
+            return self._error("Erro interno do servidor.", 500)
         return self._static(parsed.path)
 
     def do_POST(self):
@@ -855,10 +919,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self._review_card(match.group(1), body)
         except ValueError as exc:
             return self._error(str(exc), 400)
-        except sqlite3.IntegrityError as exc:
-            return self._error(f"Não foi possível salvar: {exc}", 409)
+        except sqlite3.IntegrityError:
+            return self._error("Não foi possível salvar devido a um conflito de dados.", 409)
         except (sqlite3.Error, OSError, RuntimeError, TypeError) as exc:
-            return self._error(str(exc), 500)
+            self.log_error("Erro interno: %r", exc)
+            return self._error("Erro interno do servidor.", 500)
         return self._error("Rota não encontrada.", 404)
 
     def do_PUT(self):
@@ -930,10 +995,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(session_public(updated))
         except ValueError as exc:
             return self._error(str(exc), 400)
-        except sqlite3.IntegrityError as exc:
-            return self._error(f"Não foi possível salvar: {exc}", 409)
+        except sqlite3.IntegrityError:
+            return self._error("Não foi possível salvar devido a um conflito de dados.", 409)
         except (sqlite3.Error, OSError, RuntimeError, TypeError) as exc:
-            return self._error(str(exc), 500)
+            self.log_error("Erro interno: %r", exc)
+            return self._error("Erro interno do servidor.", 500)
         return self._error("Rota não encontrada.", 404)
 
     def do_DELETE(self):
@@ -951,7 +1017,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._error("Material não encontrado.", 404)
             return self._json({"ok": True})
         except sqlite3.Error as exc:
-            return self._error(str(exc), 500)
+            self.log_error("Erro interno: %r", exc)
+            return self._error("Erro interno do servidor.", 500)
 
     def _complete_session(self, session_id: str, body: dict):
         cards = body.get("cards", [])
@@ -1025,7 +1092,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _static(self, path: str):
         if not DIST_ROOT.is_dir():
-            return self._error("A interface ainda não foi compilada. Execute npm run build.", 503)
+            return self._error("A interface ainda não foi compilada. Execute pnpm run build.", 503)
         requested = unquote(path.lstrip("/")) or "index.html"
         try:
             target = (DIST_ROOT / requested).resolve(strict=True)
@@ -1087,6 +1154,14 @@ def main():
         raise SystemExit("A porta deve estar entre 1 e 65535.")
     PORT = args.port
     init_db()
+    for profile in profiles.list_profiles(STUDY_DB):
+        if profile['id'] == 'principal':
+            continue
+        token = profiles.current.set(profile['id'])
+        try:
+            init_db()
+        finally:
+            profiles.current.reset(token)
     try:
         content_db().close()
     except Exception as exc:
