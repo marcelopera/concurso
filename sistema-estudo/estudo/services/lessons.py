@@ -70,14 +70,14 @@ def bootstrap(app) -> dict:
                     lesson["question_count"] = question_counts.get(lesson["id"], 0)
                 subject["topics"].append({"id": t["topic_id"], "title": t["title"], "lessons": lessons})
             subjects.append(subject)
-        active = con.execute(
-            "SELECT ss.*,l.title AS lesson_title,l.topic_id,t.title AS topic_title,s.name AS subject_name FROM study_sessions ss JOIN lessons l USING(lesson_id) JOIN topics t USING(topic_id) JOIN subjects s USING(subject_id) WHERE ss.status='active' ORDER BY ss.updated_at DESC LIMIT 1"
-        ).fetchone()
-        active_session = None
-        if active:
-            active_session = dict(active)
-            active_session["payload"] = app.json_load(active_session["payload"], {})
-            active_session["timer"] = app.timer_state(active_session)
+        active_sessions = []
+        for active in con.execute(
+            "SELECT ss.*,l.title AS lesson_title,l.topic_id,t.title AS topic_title,s.name AS subject_name FROM study_sessions ss JOIN lessons l USING(lesson_id) JOIN topics t USING(topic_id) JOIN subjects s USING(subject_id) WHERE ss.status='active' ORDER BY ss.updated_at DESC, ss.session_id DESC"
+        ):
+            session = dict(active)
+            session["payload"] = app.json_load(session["payload"], {})
+            session["timer"] = app.timer_state(session)
+            active_sessions.append(session)
     totals = {
         "lessons": sum((len(t["lessons"]) for s in subjects for t in s["topics"])),
         "completed": sum(
@@ -88,7 +88,8 @@ def bootstrap(app) -> dict:
     return {
         "subjects": subjects,
         "totals": totals,
-        "active_session": active_session,
+        "active_session": active_sessions[0] if active_sessions else None,
+        "active_sessions": active_sessions,
         "roadmap": plan,
         "steps": app.STEPS,
         "profiles": available,
