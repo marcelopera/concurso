@@ -77,7 +77,7 @@ export default function App() {
       {data && screen.name === "topic" && topicRoute && <TopicPage subject={topicRoute.subject} topic={topicRoute.topic} onBack={() => setScreen({ name: "roadmap" })} onOpenLesson={(lessonId) => setScreen({ name: "lesson", lessonId })} onCreateLesson={createLesson} onRefresh={refresh} />}
       {screen.name === "lesson" && <LessonEditor lessonId={screen.lessonId} onBack={() => { refresh().catch(() => {}); setScreen({ name: "topic", topicId: data?.subjects.flatMap((s) => s.topics).find((t) => t.lessons.some((l) => l.id === screen.lessonId))?.id || "" }); }} onStart={() => startSession(screen.lessonId)} onRefresh={refresh} theme={theme} />}
       {screen.name === "free" && <FreeQuestions />}
-      {screen.name === "session" && <StudySession steps={data.steps} initialSession={screen.session} lesson={screen.lesson} theme={theme} onExit={async (destination) => { await refresh(); setScreen(destination === "lesson" ? { name: "lesson", lessonId: screen.lesson.lesson_id } : { name: "roadmap" }); }} onDone={refresh} />}
+      {screen.name === "session" && <StudySession key={screen.session.session_id} steps={data.steps} initialSession={screen.session} lesson={screen.lesson} theme={theme} onExit={async (destination) => { await refresh(); setScreen(destination === "lesson" ? { name: "lesson", lessonId: screen.lesson.lesson_id } : { name: "roadmap" }); }} onDone={refresh} />}
       {data && screen.name === "topic" && !topicRoute && <div className="empty"><strong>Tópico não encontrado.</strong><Button secondary onClick={() => setScreen({ name: "roadmap" })}>Voltar ao roadmap</Button></div>}
     </main>
     <footer className="app-footer"><span>Dados salvos neste computador</span></footer>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { api } from "../../api";
 import { Button, Notice, errorText } from "../../components/ui";
 import { SyllabusDetails } from "../../RoadmapPlan";
@@ -34,7 +34,7 @@ function LibraryPicker({ onChoose, onClose }) {
   </div>;
 }
 
-function LessonEditor({ lessonId, onBack, onStart, onRefresh, theme }) {
+function LessonEditor({ lessonId, onBack, onStart, theme }) {
   const [lesson, setLesson] = useState(null);
   const [title, setTitle] = useState("");
   const [selected, setSelected] = useState([]);
@@ -45,11 +45,11 @@ function LessonEditor({ lessonId, onBack, onStart, onRefresh, theme }) {
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  async function reload() {
+  const reload = useCallback(async () => {
     const result = await api("/api/lessons/" + lessonId);
     setLesson(result); setTitle(result.title); setSelected(result.occurrence_ids || []);
-  }
-  useEffect(() => { reload().catch((e) => setError(errorText(e))); }, [lessonId]);
+  }, [lessonId]);
+  useEffect(() => { reload().catch((e) => setError(errorText(e))); }, [reload]);
   async function saveTitle() {
     setSaving(true); setError("");
     try { const result = await api("/api/lessons/" + lessonId, { method: "PUT", body: { title } }); setLesson(result); setTitle(result.title); }

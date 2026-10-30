@@ -1,0 +1,15 @@
+name: Melhoria
+description: Propor uma mudança de comportamento
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema que deseja resolver
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Comportamento esperado e critérios de aceite
+    validations:
+      required: true

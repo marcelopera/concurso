@@ -3,6 +3,7 @@
 !sistema-estudo/*.py
 !sistema-estudo/package.json
 !sistema-estudo/pnpm-lock.yaml
+!sistema-estudo/pnpm-workspace.yaml
 !sistema-estudo/index.html
 !sistema-estudo/vite.config.js
 !sistema-estudo/src/
@@ -19,5 +20,6 @@
 !sistema-estudo/catalogo/**
 !sistema-estudo/estudo/
 !sistema-estudo/estudo/*.py
+!sistema-estudo/estudo/**
 **/__pycache__/
 **/*.pyc

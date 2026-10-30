@@ -6,6 +6,11 @@
 .venv/
 venv/
 .pytest_cache/
+.ruff_cache/
+.qa-tools/
+.qa-results/
+*.log
+*.egg-info/
 /base-questoes/execucoes/
 /base-questoes/dados/fontes-visuais/
 /sistema-estudo/tests/evidencias-perfis/
