@@ -48,7 +48,7 @@ jobs:
         working-directory: sistema-estudo
         env:
           PYTHON: ${{ steps.python.outputs.python-path }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: browser-evidence-${{ matrix.os }}
