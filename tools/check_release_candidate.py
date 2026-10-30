@@ -134,6 +134,8 @@ def main() -> int:
             raise GateError("checkout HEAD does not match the requested SHA")
         if run("git", "status", "--porcelain", cwd=root):
             raise GateError("working tree is not clean")
+        if run("git", "rev-parse", "--is-shallow-repository", cwd=root) != "false":
+            raise GateError("a full, non-shallow clone is required to inspect release history")
         run("git", "cat-file", "-e", f"{args.sha}^{{commit}}", cwd=root)
 
         repository = repository_slug(root)
