@@ -4,7 +4,7 @@ Revisão do estado posterior aos PRs #2 e #8, com complementos deste PR. Esta p�
 
 | Item | Estado e evidência |
 | --- | --- |
-| P0.1/P0.2 — clone limpo e caminhos | Catálogo fictício, biblioteca opcional, variáveis de ambiente e testes portáveis já existiam. A CI agora procura caminhos pessoais e inicia a imagem; o contexto Docker passa a incluir as migrações SQL. |
+| P0.1/P0.2 — clone limpo e caminhos | Catálogo fictício, biblioteca opcional, variáveis de ambiente e testes portáveis já existiam. A CI agora procura caminhos pessoais e inicia a imagem; o contexto Docker inclui as migrações SQL e o pnpm é instalado explicitamente, sem depender de Corepack na imagem Node. |
 | P0.3/P0.4 — dados e licença | A árvore atual contém código, plano e fixtures sintéticas com MIT e política de dados separada. Há ferramenta de manifesto com SHA-256 e proveniência, e atributos de dados gerados. A limpeza do histórico e o armazenamento externo dos lotes continuam pendentes. |
 | P1.1 — contratos e planos | A abertura do catálogo valida estrutura e versão, com compatibilidade legada. Há JSON Schema v1 de questões, validação na CI e importação transacional de planos externos. O teste de estabilidade de IDs após reconsolidação ainda depende do pipeline. |
 | P1.2 — backend | Configuração, conexões, migrações, serviços de catálogo/aulas/sessões e adaptador HTTP com tabela de rotas. Exceções/status centralizados; detalhes internos não chegam em 5xx. Etapas vêm do servidor; a porta efetiva substitui a mutação global. Os módulos de planos e mapeamento usam a migração central em vez de duplicar DDL. |

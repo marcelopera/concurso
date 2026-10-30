@@ -35,10 +35,14 @@ def database(base, profile_id):
     if not re.fullmatch(r"[a-f0-9]{32}", profile_id):
         raise ValueError("Perfil não encontrado. Selecione um perfil válido.")
     with closing(registry(base)) as con:
-        if not con.execute("SELECT 1 FROM profiles WHERE id=?", (profile_id,)).fetchone():
+        registered = con.execute("SELECT id FROM profiles WHERE id=?", (profile_id,)).fetchone()
+        if registered is None:
             raise ValueError("Perfil não encontrado. Selecione um perfil válido.")
-    path = base.parent / (base.stem + "-perfis") / (profile_id + ".sqlite")
-    if not path.is_file():
+    # Only the registered identifier contributes to the filename. Resolve and
+    # check containment as well, so a database symlink cannot escape the folder.
+    folder = (base.parent / (base.stem + "-perfis")).resolve()
+    path = (folder / (registered["id"] + ".sqlite")).resolve()
+    if not path.is_relative_to(folder) or not path.is_file():
         raise ValueError("O banco deste perfil não foi encontrado.")
     return path
 

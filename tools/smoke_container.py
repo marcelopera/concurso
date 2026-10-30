@@ -3,6 +3,7 @@
 import json
 import subprocess
 import time
+from http.client import HTTPException
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -35,7 +36,7 @@ def main():
                         raise RuntimeError("Frontend ausente na imagem.")
                 print("Imagem inicia com catálogo demonstrativo, migrações e frontend; sem PDFs.")
                 return
-            except URLError:
+            except (URLError, ConnectionError, TimeoutError, HTTPException):
                 time.sleep(1)
         raise RuntimeError("O contêiner não ficou saudável a tempo.")
     finally:

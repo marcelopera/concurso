@@ -145,6 +145,8 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.request("/api/topics", "POST", raw=b"[]")[0], 400)
         self.assertEqual(self.request("/api/topics", "POST", raw=b"{")[0], 400)
         self.assertEqual(self.request("/api/bootstrap", headers={"Origin": "https://untrusted.invalid"})[0], 403)
+        for profile_id in ("../outside", "..\\outside", "a" * 32):
+            self.assertEqual(self.request("/api/bootstrap", headers={"X-Study-Profile": profile_id})[0], 404)
         with patch.object(server, "content_db", side_effect=sqlite3.OperationalError("private database details")):
             for path, method, body in [
                 ("/api/health", "GET", None),
