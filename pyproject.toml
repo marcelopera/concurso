@@ -1,42 +1,30 @@
 [project]
 name = "concurso"
 version = "0.1.0"
-description = "Sistema local de estudo para concursos"
+description = "Workspace do sistema local de estudo para concursos"
 requires-python = ">=3.10"
-dependencies = ["tzdata>=2025.1; sys_platform == 'win32'"]
+dependencies = ["concurso-estudo==0.1.0", "concurso-pipeline==0.1.0"]
 
 [project.optional-dependencies]
-dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1"]
-extract = ["pdfplumber>=0.11.0,<0.12", "pypdf>=6,<7", "jsonschema==4.26.0"]
-
-[project.scripts]
-concurso-pipeline = "concurso_pipeline.__main__:main"
+dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1", "setuptools>=77", "wheel>=0.45"]
+extract = ["concurso-pipeline[extract]==0.1.0"]
 
 [build-system]
 requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["concurso_pipeline", "concurso_pipeline.common", "concurso_pipeline.extractors", "concurso_pipeline.stages", "concurso_pipeline.schemas", "concurso_pipeline.catalog"]
-
-[tool.setuptools.package-dir]
-"concurso_pipeline.schemas" = "docs/schemas"
-"concurso_pipeline.catalog" = "sistema-estudo/catalogo"
-
-[tool.setuptools.package-data]
-concurso_pipeline = ["templates/*.html"]
-"concurso_pipeline.schemas" = ["*.json"]
-"concurso_pipeline.catalog" = ["*.sql"]
+packages = []
 
 [tool.ruff]
 target-version = "py310"
 line-length = 120
-exclude = [".qa-tools", "node_modules", ".git"]
+src = [".", "packages/contracts/src", "packages/pipeline/src", "packages/estudo/backend/src"]
+exclude = [".qa-tools", "node_modules", ".git", ".venv", "build"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.ruff.lint.per-file-ignores]
-"sistema-estudo/tests/*.py" = ["E402"]
-"sistema-estudo/scripts/*.py" = ["E402"]
+"packages/estudo/backend/tests/*.py" = ["E402"]
 

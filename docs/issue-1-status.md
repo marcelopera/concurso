@@ -1,5 +1,13 @@
 # Pendências da issue #1
 
+## Refatoração estrutural da seção 5
+
+A branch de refatoração parte da main com o PR #21 e preserva os simulados de provas completas. O código foi reorganizado em `packages/pipeline/`, `packages/estudo/backend/`, `packages/estudo/frontend/`, `plans/` e `deploy/`. Backend e pipeline têm distribuição, layout `src/` e testes próprios. `packages/contracts/` concentra os recursos compartilhados sem dependências entre aplicativo e pipeline.
+
+HTTP adapta o transporte, serviços executam os casos de uso e repositórios contêm SQL. Cada servidor recebe sua própria instância `Application`; não há composição por `sys.modules`. Há verificações de dependências, regressão com dois servidores simultâneos e smoke de wheels fora do checkout. Makefile, CI, Docker, launcher e documentação usam a nova estrutura. Planos são montados em runtime e a imagem não os incorpora. A [ADR 0004](adr/0004-package-boundaries.md) documenta essas fronteiras.
+
+As seções seguintes preservam a avaliação histórica das operações externas. A refatoração não executa limpeza de histórico, publicação de dados, alteração das configurações do GitHub ou release, e não encerra automaticamente a issue.
+
 Referência: último comentário da issue, de 30/10/2026, após os PRs #2, #8 e #9. Esta avaliação distingue o que foi implementado neste PR das operações que o proprietário condicionou à aprovação e ao merge. A issue não deve ser encerrada automaticamente pelo PR.
 
 ## 1. Decisões

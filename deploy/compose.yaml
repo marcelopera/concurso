@@ -1,0 +1,34 @@
+services:
+  estudo:
+    image: sistema-estudo:local
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "127.0.0.1:${ESTUDO_PORTA:-8765}:${ESTUDO_PORTA:-8765}"
+    environment:
+      ESTUDO_PORT: "${ESTUDO_PORTA:-8765}"
+      BIBLIOTECA_DIR: /app/biblioteca-concursos
+      ESTUDO_PLAN_FILE: /app/plans/${ESTUDO_PLAN:-apofp-2026}/roadmap.json
+    command: ["python", "-m", "estudo", "serve", "--host", "0.0.0.0", "--init-plan", "/app/plans/${ESTUDO_PLAN:-apofp-2026}/roadmap.json"]
+    volumes:
+      - estudo-dados:/app/data
+      - ${BIBLIOTECA_DIR:-../biblioteca-concursos}:/app/biblioteca-concursos:ro
+      - ${ESTUDO_PLANS_DIR:-../plans}:/app/plans:ro
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('ESTUDO_PORT', '8765') + '/api/health', timeout=5).close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  estudo-dados:

@@ -1,25 +1,39 @@
 PYTHON ?= python
 PNPM ?= pnpm
+FRONTEND := packages/estudo/frontend
+PLAN ?= plans/apofp-2026/roadmap.json
+PIPELINE_ARGS ?= --help
+PYTHON_PACKAGES := -e packages/contracts -e packages/pipeline -e packages/estudo/backend
 
-.PHONY: setup test lint build run
+.PHONY: setup test lint build run pipeline test-e2e test-packages
 setup:
-	$(PYTHON) -m pip install -e ".[dev,extract]"
-	cd sistema-estudo && $(PNPM) install --frozen-lockfile
+	$(PYTHON) -m pip install $(PYTHON_PACKAGES) -e ".[dev,extract]"
+	$(PNPM) --dir $(FRONTEND) install --frozen-lockfile
 
 test:
-	$(PYTHON) -m unittest discover -s tests/pipeline -v
-	$(PYTHON) sistema-estudo/tests/run_demo_suite.py
-	cd sistema-estudo && $(PNPM) test
+	$(PYTHON) -m unittest discover -s tests -v
+	$(PYTHON) -m unittest discover -s packages/pipeline/tests -v
+	$(PYTHON) packages/estudo/backend/tests/run_demo_suite.py
+	$(PNPM) --dir $(FRONTEND) test
 
 lint:
 	$(PYTHON) -m ruff check .
 	$(PYTHON) -m ruff format --check .
 	$(PYTHON) tools/check_repository.py
-	cd sistema-estudo && $(PNPM) run lint
+	$(PNPM) --dir $(FRONTEND) run lint
 
 build:
-	cd sistema-estudo && $(PNPM) run build
+	$(PNPM) --dir $(FRONTEND) run build
 
 run: build
-	cd sistema-estudo && $(PYTHON) scripts/inicializar.py
-	cd sistema-estudo && $(PYTHON) -m estudo
+	$(PYTHON) -m estudo init --plan $(PLAN)
+	$(PYTHON) -m estudo
+
+pipeline:
+	$(PYTHON) -m concurso_pipeline $(PIPELINE_ARGS)
+
+test-e2e: build
+	$(PNPM) --dir $(FRONTEND) run test:e2e
+
+test-packages:
+	$(PYTHON) tools/check_packages.py

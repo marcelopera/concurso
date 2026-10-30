@@ -2,7 +2,7 @@
 
 Status: aceita para o aplicativo atual.
 
-O produto funciona localmente, sem autenticação, com PDFs opcionais e catálogo somente leitura. Mantemos o backend na biblioteca padrão do Python e adicionamos um adaptador HTTP com tabela explícita de rotas. Isso conserva a instalação pequena e dá uma localização única para status e erros. Os serviços recebem as dependências da composição em `server.py`; as conexões e migrações pertencem a `estudo/db/`.
+O produto funciona localmente, sem autenticação, com PDFs opcionais e catálogo somente leitura. Mantemos o backend na biblioteca padrão do Python e adicionamos um adaptador HTTP com tabela explícita de rotas. Isso conserva a instalação pequena e dá uma localização única para status e erros. Os serviços recebem uma instância explícita da composição em `estudo/app.py`; as conexões e migrações pertencem a `estudo/db/`. A [ADR 0004](0004-package-boundaries.md) registra a organização atual dos pacotes.
 
 O código novo usa identificadores em inglês; UI e transcrições de fontes usam português. Os nomes portugueses no contrato SQLite permanecem para compatibilidade com os dados existentes.
 
