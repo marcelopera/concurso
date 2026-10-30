@@ -5,6 +5,30 @@ from __future__ import annotations
 from pathlib import Path, PureWindowsPath
 
 
+def exams(app) -> list[dict]:
+    with app.content_db() as con:
+        rows = con.execute(
+            "SELECT p.prova_id AS id, p.banca AS bank, p.concurso AS contest, "
+            "p.titulo AS title, p.caderno AS booklet, count(o.ocorrencia_id) AS question_count "
+            "FROM provas p LEFT JOIN ocorrencias o USING(prova_id) "
+            "GROUP BY p.prova_id ORDER BY p.concurso, p.banca, p.titulo, p.caderno, p.prova_id"
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def exam_questions(app, exam_id: str) -> list[dict] | None:
+    with app.content_db() as con:
+        if con.execute("SELECT 1 FROM provas WHERE prova_id=?", (exam_id,)).fetchone() is None:
+            return None
+        rows = con.execute(
+            "SELECT ocorrencia_id FROM ocorrencias WHERE prova_id=? "
+            "ORDER BY CASE WHEN numero_original GLOB '[0-9]*' THEN 0 ELSE 1 END, "
+            "CAST(numero_original AS INTEGER), numero_original, ocorrencia_id",
+            (exam_id,),
+        ).fetchall()
+    return [app.question_for_client(app.content_question(row[0])) for row in rows]
+
+
 def safe_library_file(app, path_value: str | None) -> Path | None:
     if not path_value:
         return None

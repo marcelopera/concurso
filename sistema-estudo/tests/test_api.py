@@ -83,6 +83,19 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(len(history["items"]), 2)
         self.assertTrue(all(item["reference_snapshot"]["auto_graded"] for item in history["items"]))
 
+    def test_exams_list_and_questions_hide_answers(self):
+        status, data, _ = self.request("/api/exams")
+        self.assertEqual(status, 200)
+        self.assertEqual(len(data["items"]), 20)
+        exam = next(item for item in data["items"] if item["id"] == "p1")
+        self.assertEqual(exam["question_count"], 1)
+        status, questions, _ = self.request("/api/exams/questions?id=p1")
+        self.assertEqual(status, 200)
+        self.assertEqual([item["occurrence_id"] for item in questions["items"]], ["o1"])
+        self.assertNotIn("reference_answer", questions["items"][0])
+        self.assertNotIn("source_answers", questions["items"][0])
+        self.assertEqual(self.request("/api/exams/questions?id=unknown")[0], 404)
+
     def test_uncorrectable_question_does_not_get_a_grade(self):
         # A read-only adapter supplies an unreviewed extraction without changing the catalog.
         original = server.content_question

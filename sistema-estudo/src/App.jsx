@@ -6,6 +6,7 @@ import { Roadmap, TopicPage } from "./features/roadmap/Roadmap";
 import LessonEditor from "./features/library/LessonEditor";
 import StudySession from "./features/session/StudySession";
 import FreeQuestions from "./features/catalog/FreeQuestions";
+import Exams from "./features/catalog/Exams";
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -66,7 +67,7 @@ export default function App() {
   const topicRoute = screen.name === "topic" ? data?.subjects.flatMap((subject) => subject.topics.map((topic) => ({ subject, topic }))).find((item) => item.topic.id === screen.topicId) : null;
   return <div className="app-shell">
     <header className="app-header"><button className="brand" disabled={screen.name === "session"} onClick={() => setScreen({ name: "roadmap" })} aria-label="Abrir roadmap"><span className="brand-mark">e</span><span>Estudo</span></button>
-      {screen.name !== "session" && <nav className="main-nav" aria-label="Navegação principal"><button className={screen.name !== "free" ? "selected" : ""} onClick={() => setScreen({ name: "roadmap" })}>Roadmap</button><button className={screen.name === "free" ? "selected" : ""} onClick={() => setScreen({ name: "free" })}>Questões livres</button></nav>}
+      {screen.name !== "session" && <nav className="main-nav" aria-label="Navegação principal"><button className={!['free', 'exams'].includes(screen.name) ? "selected" : ""} onClick={() => setScreen({ name: "roadmap" })}>Roadmap</button><button className={screen.name === "free" ? "selected" : ""} onClick={() => setScreen({ name: "free" })}>Questões livres</button><button className={screen.name === "exams" ? "selected" : ""} onClick={() => setScreen({ name: "exams" })}>Provas completas</button></nav>}
       <button className="theme-toggle" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={theme === "dark" ? "Usar tema claro" : "Usar tema escuro"}>{theme === "dark" ? "☼" : "◐"}</button>
     </header>
     {data && <ProfileBox data={data} disabled={screen.name === "session"} busy={profileBusy} onSelect={switchProfile} onCreate={createProfile} />}
@@ -77,6 +78,7 @@ export default function App() {
       {data && screen.name === "topic" && topicRoute && <TopicPage subject={topicRoute.subject} topic={topicRoute.topic} onBack={() => setScreen({ name: "roadmap" })} onOpenLesson={(lessonId) => setScreen({ name: "lesson", lessonId })} onCreateLesson={createLesson} onRefresh={refresh} />}
       {screen.name === "lesson" && <LessonEditor lessonId={screen.lessonId} onBack={() => { refresh().catch(() => {}); setScreen({ name: "topic", topicId: data?.subjects.flatMap((s) => s.topics).find((t) => t.lessons.some((l) => l.id === screen.lessonId))?.id || "" }); }} onStart={() => startSession(screen.lessonId)} onRefresh={refresh} theme={theme} />}
       {screen.name === "free" && <FreeQuestions />}
+      {data && screen.name === "exams" && <Exams profileId={data.profile.id} />}
       {screen.name === "session" && <StudySession key={screen.session.session_id} steps={data.steps} initialSession={screen.session} lesson={screen.lesson} theme={theme} onExit={async (destination) => { await refresh(); setScreen(destination === "lesson" ? { name: "lesson", lessonId: screen.lesson.lesson_id } : { name: "roadmap" }); }} onDone={refresh} />}
       {data && screen.name === "topic" && !topicRoute && <div className="empty"><strong>Tópico não encontrado.</strong><Button secondary onClick={() => setScreen({ name: "roadmap" })}>Voltar ao roadmap</Button></div>}
     </main>
