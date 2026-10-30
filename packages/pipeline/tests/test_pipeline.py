@@ -8,12 +8,14 @@ import sys
 import tempfile
 import unittest
 from contextlib import closing, redirect_stdout
+from datetime import datetime
 from io import StringIO
 from pathlib import Path
 
+from concurso_contracts.catalog.contrato import hash_sources
 from concurso_pipeline.__main__ import run
 from concurso_pipeline.common import expected_count, ident, js, norm, readjl, writejl
-from concurso_pipeline.config import Settings, execution, source_file
+from concurso_pipeline.config import Settings, canonical_source_hashes, execution, source_file
 from concurso_pipeline.stages.review import documents
 from concurso_pipeline.stages.validate import validate_records
 from tools.dataset_manifest import verify
@@ -102,14 +104,49 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(after["doc_Cebraspe"], legacy)
         self.assertEqual(ident("o", "doc_Cebraspe", "doc_Cebraspe", "1"), legacy)
         with closing(sqlite3.connect(self.settings.output_dir / "conteudo.sqlite")) as db:
-            self.assertEqual(db.execute("PRAGMA user_version").fetchone()[0], 1)
+            self.assertEqual(db.execute("PRAGMA user_version").fetchone()[0], 2)
             self.assertEqual(db.execute("SELECT count(*) FROM ocorrencias").fetchone()[0], 6)
+            metadata = db.execute(
+                "SELECT versao, execucao_id, origem, gerado_em, commit_origem, hash_fontes, fontes_json FROM schema_meta"
+            ).fetchone()
+            self.assertEqual(metadata[:3], (2, self.settings.run_id, "concurso_pipeline"))
+            self.assertNotEqual(metadata[3], self.settings.run_id)
+            self.assertEqual(datetime.fromisoformat(metadata[3]).utcoffset().total_seconds(), 0)
+            self.assertRegex(metadata[4], r"^(?:desconhecido|[0-9a-f]{40}|[0-9a-f]{64})$")
+            sources = json.loads(metadata[6])
+            self.assertEqual(sources, canonical_source_hashes(self.settings))
+            self.assertEqual(metadata[5], hash_sources(sources))
+            execution_metadata = json.loads(db.execute("SELECT metadados_json FROM execucoes").fetchone()[0])
+            self.assertEqual(execution_metadata["execucao_id"], self.settings.run_id)
+            self.assertEqual(execution_metadata["gerado_em"], metadata[3])
+            self.assertRegex(execution_metadata["commit_execucao"], r"^(?:desconhecido|[0-9a-f]{40}|[0-9a-f]{64})$")
             self.assertTrue(
                 all(not Path(r[0]).is_absolute() for r in db.execute("SELECT arquivo_local FROM documentos"))
             )
         for p in self.settings.output_dir.rglob("*"):
             if p.is_file() and p.suffix in {".jsonl", ".json", ".csv", ".html"}:
                 self.assertNotIn(str(self.root), p.read_text(encoding="utf-8-sig"))
+
+    def test_catalog_rejects_changed_canonical_sources_until_rebuilt(self):
+        self.stage("review")
+        self.stage("build")
+        catalog = self.settings.output_dir / "conteudo.sqlite"
+        with closing(sqlite3.connect(catalog)) as db:
+            old_hash = db.execute("SELECT hash_fontes FROM schema_meta").fetchone()[0]
+            started_at = db.execute("SELECT gerado_em FROM schema_meta").fetchone()[0]
+
+        canonical_documents = self.settings.canonical / "documentos.json"
+        docs = json.loads(canonical_documents.read_text(encoding="utf-8"))
+        docs[0]["titulo"] = "Título alterado depois do build"
+        canonical_documents.write_text(js(docs), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "fontes canônicas"):
+            self.stage("validate")
+
+        self.stage("build")
+        with closing(sqlite3.connect(catalog)) as db:
+            new_hash, rebuilt_start = db.execute("SELECT hash_fontes, gerado_em FROM schema_meta").fetchone()
+        self.assertNotEqual(new_hash, old_hash)
+        self.assertEqual(rebuilt_start, started_at)
 
     def test_cli_runs_from_another_directory_with_explicit_paths(self):
         self.stage("review")

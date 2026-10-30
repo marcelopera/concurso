@@ -6,8 +6,10 @@ import sqlite3
 from collections import Counter, defaultdict
 from contextlib import closing
 
+from concurso_contracts.catalog.contrato import CATALOG_VERSION, hash_sources, serialize_sources
+
 from ..common import ident, js, norm, question_text, readjl, unaccent, writejl
-from ..config import config, resource_file
+from ..config import canonical_source_hashes, config, execution_metadata, resource_file
 from .validate import validate_records
 
 
@@ -115,6 +117,10 @@ def disciplina_confiavel(value):
 def main():
     None
     docs = json.loads((config().canonical / "documentos.json").read_text(encoding="utf-8"))
+    execution = execution_metadata(config())
+    source_hashes = canonical_source_hashes(config())
+    source_hash = hash_sources(source_hashes)
+    sources_json = serialize_sources(source_hashes)
     for kind in ("questoes", "topicos", "gabaritos"):
         validate_records(kind, readjl(config().canonical / f"{kind}.jsonl"), docs)
     docmap = {d["documento_id"]: d for d in docs}
@@ -123,24 +129,38 @@ def main():
         build.unlink()
     db = sqlite3.connect(build)
     db.executescript(resource_file("catalog", "esquema.sql").read_text(encoding="utf-8"))
-    db.executescript(
-        "CREATE TABLE schema_meta(versao INTEGER NOT NULL); INSERT INTO schema_meta VALUES(1); PRAGMA user_version=1;"
+    execution_db_metadata = {
+        "execucao_id": execution["execucao_id"],
+        "origem": execution["origem"],
+        "proveniencia": execution["proveniencia"],
+        "gerado_em": execution["gerado_em"],
+        "commit_execucao": execution["commit_execucao"],
+        "commit_origem": execution["commit_origem"],
+        "hash_fontes": source_hash,
+        "fontes": source_hashes,
+    }
+    db.execute(
+        "INSERT INTO schema_meta VALUES(?,?,?,?,?,?,?)",
+        (
+            CATALOG_VERSION,
+            execution["execucao_id"],
+            execution["origem"],
+            execution["gerado_em"],
+            execution["commit_origem"],
+            source_hash,
+            sources_json,
+        ),
     )
     db.execute(
         "INSERT INTO execucoes VALUES(?,?,?,?)",
         (
-            config().run_id,
-            config().run_id,
-            "v1",
-            js(
-                {
-                    "proveniencia": "consultar manifesto de entrada",
-                    "origem": "biblioteca local",
-                    "escopo": "conteudo; sem dados de alunos",
-                }
-            ),
+            execution["execucao_id"],
+            execution["gerado_em"],
+            f"v{CATALOG_VERSION}",
+            js(execution_db_metadata),
         ),
     )
+    db.execute(f"PRAGMA user_version={CATALOG_VERSION}")
     for d in docs:
         db.execute(
             "INSERT INTO documentos VALUES(?,?,?,?,?,?,?,?,?,?,?)",

@@ -8,7 +8,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from .common import js
-from .config import Settings, execution
+from .config import Settings, execution, execution_metadata
 from .extractors import REGISTRY, SYLLABUS
 
 STAGES = (
@@ -30,6 +30,7 @@ def run(stage, settings, boards):
     if stage in {"extract", "syllabus"}:
         settings = replace(settings, boards=tuple(boards))
     with execution(settings):
+        execution_metadata(settings)
         if stage == "build":
             # Build consumes the canonical source; extraction and review are explicit.
             for name in ("consolidate", "index", "validate", "report"):

@@ -6,8 +6,10 @@ from contextlib import closing
 
 import jsonschema
 
+from concurso_contracts.catalog.contrato import CATALOG_VERSION, hash_sources, serialize_sources, validate_catalog
+
 from ..common import norm, question_text, readjl, relative_file
-from ..config import config, resource_file
+from ..config import canonical_source_hashes, config, resource_file
 
 SCHEMAS = {"questoes": "question", "topicos": "topic", "gabaritos": "answer"}
 
@@ -39,10 +41,13 @@ def main():
     for kind in SCHEMAS:
         validate_records(kind, readjl(settings.canonical / f"{kind}.jsonl"), docs)
     with closing(sqlite3.connect(f"{(settings.output_dir / 'conteudo.sqlite').as_uri()}?mode=ro", uri=True)) as db:
-        if db.execute("PRAGMA user_version").fetchone()[0] != 1:
+        if db.execute("PRAGMA user_version").fetchone()[0] != CATALOG_VERSION:
             raise ValueError("Versão do catálogo inválida.")
-        if db.execute("SELECT versao FROM schema_meta").fetchall() != [(1,)]:
-            raise ValueError("schema_meta inválido.")
+        validate_catalog(db)
+        stored_sources = db.execute("SELECT hash_fontes, fontes_json FROM schema_meta").fetchone()
+        current_sources = canonical_source_hashes(settings)
+        if stored_sources != (hash_sources(current_sources), serialize_sources(current_sources)):
+            raise ValueError("O catálogo não corresponde às fontes canônicas e ao manifesto atuais.")
         if (
             db.execute("PRAGMA integrity_check").fetchone()[0] != "ok"
             or db.execute("PRAGMA foreign_key_check").fetchall()
