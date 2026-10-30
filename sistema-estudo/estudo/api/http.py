@@ -344,6 +344,15 @@ class Handler(BaseHTTPRequestHandler):
             deadline = now + timedelta(minutes=self.app.STEP_MINUTES[0])
             with self.app.content_db() as content:
                 initial_payload = question_links.session_pool(con, content, lesson_id)
+            previous = con.execute(
+                "SELECT payload FROM study_sessions WHERE lesson_id=? AND status='completed' "
+                "ORDER BY completed_at DESC, rowid DESC LIMIT 1",
+                (lesson_id,),
+            ).fetchone()
+            if previous:
+                previous_payload = self.app.json_load(previous["payload"], {})
+                if isinstance(previous_payload, dict) and isinstance(previous_payload.get("boardScene"), dict):
+                    initial_payload["boardScene"] = previous_payload["boardScene"]
             con.execute(
                 "INSERT INTO study_sessions(session_id,lesson_id,status,current_step,deadline_at,payload,started_at,updated_at) VALUES(?,?,'active',0,?,?,?,?)",
                 (

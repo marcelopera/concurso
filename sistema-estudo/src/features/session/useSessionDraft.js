@@ -26,8 +26,7 @@ export function useSessionDraft(initialPayload, sessionId, setSession) {
     const next = typeof patch === "function" ? patch(previous) : { ...previous, ...patch };
     payloadRef.current = next;
     setPayload(next);
-    setSaveStatus("saving");
-    setSaveError("");
+    queue.current.markDirty();
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       saveTimer.current = null;

@@ -35,3 +35,19 @@ test("a failed save is reported and does not block a subsequent retry", async ()
   assert.equal(await queue.enqueue("retry"), "retry");
   assert.deepEqual(events.at(-1), ["saved", "retry"]);
 });
+
+test("a response cannot mark newer, debounced edits as saved", async () => {
+  let resolveSave;
+  const events = [];
+  const queue = createSaveQueue(
+    () => new Promise((resolve) => { resolveSave = resolve; }),
+    (...event) => events.push(event),
+  );
+  const first = queue.enqueue("old drawing");
+  await new Promise(setImmediate);
+  queue.markDirty();
+  resolveSave("old drawing");
+  await first;
+  assert.equal(events.at(-1)[0], "saving");
+  assert.equal(events.some(([status]) => status === "saved"), false);
+});
