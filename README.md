@@ -80,3 +80,5 @@ Dados privados, entradas do pipeline, bancos e builds ficam em `data/`, fora do 
 `make lint` verifica Python, JavaScript, caminhos pessoais, tamanhos e links locais. `make test` executa as regressões sintéticas e as regras de arquitetura. `make test-packages` constrói wheels e verifica CLIs, contratos e migrações fora do checkout. Para E2E, instale o navegador com `pnpm --dir packages/estudo/frontend exec playwright install chromium` e execute `make test-e2e`. A CI repete essas verificações em Linux, macOS e Windows e testa a imagem no Linux.
 
 Consulte a [arquitetura](docs/architecture.md), o [contrato de dados](docs/data-contract.md), o [pipeline](docs/pipeline.md), os [planos externos](docs/plan-packs.md) e as [pendências da issue #1](docs/issue-1-status.md). A política dos dados está em [DATA-LICENSE.md](DATA-LICENSE.md); a remoção da árvore atual não os remove do histórico Git.
+
+A política da primeira release, seus pré-requisitos e a verificação do SHA candidato estão em [docs/release.md](docs/release.md). A versão `v0.1.0` continua não publicada até que backup e limpeza histórica sejam comprovados.
