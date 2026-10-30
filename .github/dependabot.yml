@@ -1,5 +1,13 @@
 version: 2
 updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: pip
+    directory: /sistema-estudo
+    schedule:
+      interval: weekly
   - package-ecosystem: npm
     directory: /sistema-estudo
     schedule:

@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test('perfil e catálogo de demonstração funcionam em uma instalação isolada', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Roadmap · APOFP SP' })).toBeVisible();
+  const data = await (await page.request.get('/api/bootstrap')).json();
+  await expect(page.getByRole('heading', { name: 'Roadmap · ' + data.roadmap.title })).toBeVisible();
   await page.getByRole('button', { name: '+ Criar perfil' }).click();
   await page.getByLabel('Nome do perfil').fill('Teste');
   await page.getByRole('button', { name: 'Criar perfil', exact: true }).click();
@@ -18,8 +19,28 @@ test('sessão usa as etapas fornecidas pelo servidor e mantém o estado', async 
   expect(created.ok()).toBeTruthy();
   await page.goto('/');
   await expect(page.getByRole('heading', { name: bootstrap.steps[0].title })).toBeVisible();
+  await page.getByPlaceholder('O que você lembra da aula anterior…').fill('Anotação persistida no teste');
+  await expect(page.getByText('Salvo automaticamente')).toBeVisible();
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page.getByRole('heading', { name: bootstrap.steps[1].title })).toBeVisible();
   await page.reload();
   await expect(page.getByRole('heading', { name: bootstrap.steps[1].title })).toBeVisible();
+  await page.getByRole('button', { name: 'Voltar', exact: true }).click();
+  await expect(page.getByPlaceholder('O que você lembra da aula anterior…')).toHaveValue('Anotação persistida no teste');
+});
+
+test('quadro carrega sob demanda usando somente recursos locais', async ({ page, request }) => {
+  const profile = await (await request.post('/api/profiles', { data: { name: 'Quadro offline' } })).json();
+  const headers = { 'X-Study-Profile': profile.id };
+  const session = await (await request.post('/api/lessons/apofp26_a01_01/sessions', { headers, data: {} })).json();
+  const advanced = await request.post(`/api/sessions/${session.session_id}/step`, { headers, data: { step: 3 } });
+  expect(advanced.ok()).toBeTruthy();
+  await page.addInitScript((id) => localStorage.setItem('study-profile', id), profile.id);
+  const external = [];
+  page.on('request', (req) => { if (/^https?:/.test(req.url()) && new URL(req.url()).origin !== 'http://127.0.0.1:8877') external.push(req.url()); });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Whiteboard', exact: true })).toBeVisible();
+  await expect(page.locator('.excalidraw canvas').first()).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  expect(external).toEqual([]);
 });

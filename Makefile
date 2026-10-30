@@ -1,13 +1,20 @@
 PYTHON ?= python
 PNPM ?= pnpm
 
-.PHONY: setup test build run
+.PHONY: setup test lint build run
 setup:
-	$(PYTHON) -m pip install -r sistema-estudo/requirements.txt
+	$(PYTHON) -m pip install -e ".[dev]"
 	cd sistema-estudo && $(PNPM) install --frozen-lockfile
 
 test:
-	$(PYTHON) -m unittest discover -s sistema-estudo/tests -v
+	$(PYTHON) sistema-estudo/tests/run_demo_suite.py
+	cd sistema-estudo && $(PNPM) test
+
+lint:
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m ruff format --check .
+	$(PYTHON) tools/check_repository.py
+	cd sistema-estudo && $(PNPM) run lint
 
 build:
 	cd sistema-estudo && $(PNPM) run build

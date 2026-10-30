@@ -9,7 +9,9 @@ REPO_ROOT = APP_ROOT.parent
 DATA_DIR = APP_ROOT / "dados"
 PRIVATE_CONTENT_DB = DATA_DIR / "conteudo.sqlite"
 DEMO_CONTENT_DB = DATA_DIR / "demo.sqlite"
-CONTENT_DB = Path(os.environ.get("ESTUDO_CONTENT_DB", PRIVATE_CONTENT_DB if PRIVATE_CONTENT_DB.is_file() else DEMO_CONTENT_DB)).resolve()
+CONTENT_DB = Path(
+    os.environ.get("ESTUDO_CONTENT_DB", PRIVATE_CONTENT_DB if PRIVATE_CONTENT_DB.is_file() else DEMO_CONTENT_DB)
+).resolve()
 STUDY_DB = Path(os.environ.get("ESTUDO_DB", DATA_DIR / "estudo.sqlite")).resolve()
 LIBRARY_ROOT = Path(os.environ.get("BIBLIOTECA_DIR", REPO_ROOT / "biblioteca-concursos")).resolve()
 DIST_ROOT = APP_ROOT / "dist"

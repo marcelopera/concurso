@@ -1,7 +1,7 @@
-FROM node:25-bookworm-slim AS frontend
+FROM node:25-bookworm-slim@sha256:81db02c4b671288a03915da9534dbd54f96d0e7c24d80ccc54f5b36b2e684370 AS frontend
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@11.25.0 --activate
-COPY sistema-estudo/package.json sistema-estudo/pnpm-lock.yaml ./
+COPY sistema-estudo/package.json sistema-estudo/pnpm-lock.yaml sistema-estudo/pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY sistema-estudo/index.html sistema-estudo/vite.config.js ./
 COPY sistema-estudo/src ./src
@@ -9,7 +9,7 @@ COPY sistema-estudo/public ./public
 COPY sistema-estudo/scripts/copy-excalidraw-fonts.mjs ./scripts/
 RUN pnpm run build
 
-FROM python:3.12-slim-bookworm
+FROM python:3.12-slim-bookworm@sha256:e697c81897302a4c4333bade000d98038fbb21eb064f8ee1fd42d02ebcd9d337
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app/sistema-estudo
 RUN apt-get update && apt-get install -y --no-install-recommends tzdata \

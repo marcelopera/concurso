@@ -1,35 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { api, profileHeaders } from "../../api";
+import React, { useEffect, useState } from "react";
+import { api } from "../../api";
 import { Button, Chip, Notice, errorText } from "../../components/ui";
 import { SyllabusDetails } from "../../RoadmapPlan";
 import { QuestionCard } from "../catalog/Questions";
 import { ExcalScene } from "../whiteboard/Whiteboard";
 
-function ReviewCard({ card, onGrade }) {
-  const [revealed, setRevealed] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  async function grade(value) { setSaving(true); setError(""); try { await onGrade(card.card_id, value); } catch (e) { setError(errorText(e)); } finally { setSaving(false); } }
-  return <div className="card review-card"><span className="tag">Revisão vencida · {card.subject_name} / {card.topic_title}</span><p className="question-stem">{card.front}</p>
-    {revealed ? <><div className="answer-box">{card.back}</div><p className="muted">Intervalo atual: {card.interval_days} dia{card.interval_days > 1 ? "s" : ""}</p><div className="rating-row"><Button secondary disabled={saving} onClick={() => grade("errei")}>Errei · 1 dia</Button><Button secondary disabled={saving} onClick={() => grade("dificil")}>Difícil · manter</Button><Button disabled={saving} onClick={() => grade("facil")}>Fácil · avançar</Button></div></>
-      : <Button onClick={() => setRevealed(true)}>Mostrar resposta</Button>}
-    {error && <Notice kind="error">{error}</Notice>}
-  </div>;
-}
+import ReviewCard from "./ReviewCard";
+import { useSessionDraft } from "./useSessionDraft";
 
 function StudySession({ initialSession, lesson, onExit, onDone, theme, steps }) {
   const [session, setSession] = useState(initialSession);
-  const [payload, setPayload] = useState(() => ({
+  const draft = useSessionDraft(() => ({
     recallText: "", pretestOccurrenceId: lesson.questions?.[0]?.occurrence_id || "", notes: [], noteDraft: { text: "", origin: "", type: "cartão" },
     boardScene: { elements: [], appState: {}, files: {} }, questionIndex: 0, practiceResults: {}, helpByOccurrence: {}, pretestResult: null,
     closeCards: [], difficulties: [], reviewIds: [], ...(initialSession.payload || {}),
-  }));
-  const payloadRef = useRef(payload);
-  const saveChain = useRef(Promise.resolve());
-  const saveTimer = useRef(null);
-  const saveVersion = useRef(0);
-  const [saveStatus, setSaveStatus] = useState("saved");
-  const [saveError, setSaveError] = useState("");
+  }), initialSession.session_id, setSession);
+  const { payload, setPayload, payloadRef, saveTimer, saveStatus, saveError, sendSave, updatePayload, flush } = draft;
   const [remaining, setRemaining] = useState(initialSession.timer?.remaining_seconds ?? steps[initialSession.current_step].minutes * 60);
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState("");
@@ -47,52 +33,11 @@ function StudySession({ initialSession, lesson, onExit, onDone, theme, steps }) 
   const finishedReviews = new Set(payload.reviewIds || []);
   const nextReview = dueCards.find((card) => !finishedReviews.has(card.card_id));
 
-  function sendSave(value) {
-    const version = ++saveVersion.current;
-    setSaveStatus("saving"); setSaveError("");
-    const task = saveChain.current.catch(() => null).then(() => api("/api/sessions/" + session.session_id + "/state", { method: "PUT", body: { payload: value } }));
-    saveChain.current = task;
-    return task.then((saved) => { if (version === saveVersion.current) { setSession((current) => ({ ...current, ...saved })); setSaveStatus("saved"); } return saved; }, (error) => { if (version === saveVersion.current) { setSaveStatus("error"); setSaveError(errorText(error)); } throw error; });
-  }
-  function scheduleSave(value) {
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => sendSave(value).catch(() => {}), 650);
-  }
-  function updatePayload(patch) {
-    const previous = payloadRef.current;
-    const next = typeof patch === "function" ? patch(previous) : { ...previous, ...patch };
-    payloadRef.current = next; setPayload(next); setSaveStatus("saving"); setSaveError(""); scheduleSave(next);
-    return next;
-  }
-  async function flush() {
-    clearTimeout(saveTimer.current);
-    return sendSave(payloadRef.current);
-  }
   useEffect(() => {
     let live = true;
     api("/api/cards/due").then((result) => { if (live) setDueCards(result.items || []); }).catch((e) => { if (live) setActionError(errorText(e)); });
-    return () => { live = false; clearTimeout(saveTimer.current); };
+    return () => { live = false; };
   }, []);
-  useEffect(() => {
-    function sendPendingSave() {
-      const body = JSON.stringify({ payload: payloadRef.current });
-      if (body.length > 60000) return false;
-      fetch("/api/sessions/" + session.session_id + "/state", {
-        method: "PUT", headers: { ...profileHeaders(), "Content-Type": "application/json" }, body, keepalive: true, credentials: "same-origin",
-      }).catch(() => {});
-      return true;
-    }
-    function beforeUnload(event) {
-      if (!saveTimer.current && saveStatus === "saved") return;
-      if (!sendPendingSave() || saveStatus === "error") { event.preventDefault(); event.returnValue = ""; }
-    }
-    function pageHide() {
-      if (saveTimer.current || saveStatus !== "saved") sendPendingSave();
-    }
-    window.addEventListener("beforeunload", beforeUnload);
-    window.addEventListener("pagehide", pageHide);
-    return () => { window.removeEventListener("beforeunload", beforeUnload); window.removeEventListener("pagehide", pageHide); };
-  }, [session.session_id, saveStatus]);
   useEffect(() => {
     const update = () => {
       const timer = session.timer || {};
@@ -102,7 +47,7 @@ function StudySession({ initialSession, lesson, onExit, onDone, theme, steps }) 
     };
     update(); const handle = setInterval(update, 500);
     return () => clearInterval(handle);
-  }, [session.timer, step]);
+  }, [session.timer, step, steps]);
 
   async function navigate(nextStep) {
     setActionError(""); setBusy(true);

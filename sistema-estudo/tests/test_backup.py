@@ -2,8 +2,8 @@ import sqlite3
 import sys
 import tempfile
 import unittest
-from pathlib import Path
 from contextlib import closing
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from estudo.__main__ import copy_database
@@ -12,13 +12,13 @@ from estudo.__main__ import copy_database
 class BackupTests(unittest.TestCase):
     def test_backup_restore_and_no_overwrite(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:
-            source, backup, restored = [Path(tmp) / name for name in ('source.db', 'backup.db', 'restored.db')]
+            source, backup, restored = [Path(tmp) / name for name in ("source.db", "backup.db", "restored.db")]
             with closing(sqlite3.connect(source)) as con, con:
-                con.execute('CREATE TABLE progress(value TEXT)')
+                con.execute("CREATE TABLE progress(value TEXT)")
                 con.execute("INSERT INTO progress VALUES ('preservado')")
             copy_database(source, backup)
             copy_database(backup, restored)
             with closing(sqlite3.connect(restored)) as con:
-                self.assertEqual(con.execute('SELECT value FROM progress').fetchone()[0], 'preservado')
+                self.assertEqual(con.execute("SELECT value FROM progress").fetchone()[0], "preservado")
             with self.assertRaises(ValueError):
                 copy_database(backup, source)

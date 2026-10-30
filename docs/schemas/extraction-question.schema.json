@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/marcelopera/concurso/docs/schemas/extraction-question.schema.json",
+  "title": "Registro de questão — contrato de extração v1",
+  "type": "object",
+  "required": ["documento_id", "prova_id", "numero_original", "formato", "enunciado_original", "alternativas", "contextos", "paginas_pdf", "regioes_fonte", "status_extracao", "alertas", "metodo_extracao", "agente"],
+  "properties": {
+    "documento_id": {"type": "string", "minLength": 1},
+    "prova_id": {"type": ["string", "null"]},
+    "numero_original": {"type": "string", "minLength": 1},
+    "bloco_original": {"type": ["string", "null"]},
+    "disciplina_original": {"type": ["string", "null"]},
+    "formato": {"enum": ["multipla_escolha", "certo_errado", "discursiva"]},
+    "enunciado_original": {"type": "string"},
+    "texto_original_completo": {"type": ["string", "null"]},
+    "alternativas": {"type": "array", "items": {"type": "object", "required": ["rotulo", "texto"], "properties": {"rotulo": {"type": "string"}, "texto": {"type": "string"}}}},
+    "contextos": {"type": "array", "items": {"type": "object", "required": ["texto"], "properties": {"texto": {"type": "string"}, "paginas_pdf": {"$ref": "#/$defs/pages"}, "regioes_fonte": {"$ref": "#/$defs/regions"}}}},
+    "paginas_pdf": {"$ref": "#/$defs/pages"},
+    "regioes_fonte": {"$ref": "#/$defs/regions"},
+    "status_extracao": {"enum": ["extraido", "precisa_revisao", "incompleto"]},
+    "alertas": {"type": "array", "items": {"type": "string"}},
+    "classificacoes": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "habilidades": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "referencias_normativas_literais": {"type": "array"},
+    "metodo_extracao": {"type": "string", "minLength": 1},
+    "agente": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "pages": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+    "regions": {"type": "array", "items": {"type": "object", "required": ["pagina", "bbox"], "properties": {"pagina": {"type": "integer", "minimum": 1}, "bbox": {"type": "array", "items": {"type": "number", "minimum": 0}, "minItems": 4, "maxItems": 4}}}},
+    "evidence": {"type": "object", "required": ["trecho_evidencia", "origem", "confianca"], "properties": {"trecho_evidencia": {"type": "string"}, "origem": {"type": "string"}, "confianca": {"enum": ["alta", "media", "baixa"]}}}
+  }
+}

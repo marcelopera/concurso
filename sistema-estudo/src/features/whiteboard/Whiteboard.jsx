@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
+import React, { Suspense, lazy, useCallback, useRef, useState } from "react";
 import { Button, Notice, errorText } from "../../components/ui";
 const Excalidraw = lazy(() => import("@excalidraw/excalidraw").then((module) => ({ default: module.Excalidraw })));
 
@@ -23,11 +23,11 @@ function ExcalScene({ scene, onChange, readOnly = false, theme = "light", label 
   const latestElementsRef = useRef([]);
   const sceneReadyRef = useRef(false);
   const didFitRef = useRef(false);
-  const initialData = useMemo(() => ({
+  const [initialData] = useState(() => ({
     elements: scene?.elements || [],
     appState: { viewBackgroundColor: "#ffffff", ...serializableAppState(scene?.appState), theme },
     files: scene?.files || {},
-  }), []);
+  }));
   const fitReadOnlyScene = useCallback(() => {
     if (!readOnly || didFitRef.current || !sceneReadyRef.current || !apiRef.current) return;
     didFitRef.current = true;
