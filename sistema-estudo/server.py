@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import mimetypes
-import os
 import re
 import sqlite3
 import sys
@@ -13,25 +12,17 @@ from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path, PureWindowsPath
 from urllib.parse import parse_qs, quote, unquote, urlsplit
-from zoneinfo import ZoneInfo
 import roadmap
 import question_links
 import profiles
+from estudo.config import (
+    CONTENT_DB, DEMO_CONTENT_DB, DIST_ROOT, LIBRARY_ROOT, LOCAL_TZ,
+    MAX_BODY, PORT, STEPS, STUDY_DB,
+)
+from estudo.db.migrations import migrate
 
 
-APP_ROOT = Path(__file__).resolve().parent
-REPO_ROOT = APP_ROOT.parent
-LIBRARY_ROOT = Path(os.environ.get("BIBLIOTECA_DIR", REPO_ROOT / "biblioteca-concursos")).resolve()
-DATA_DIR = APP_ROOT / "dados"
-PRIVATE_CONTENT_DB = DATA_DIR / "conteudo.sqlite"
-DEMO_CONTENT_DB = DATA_DIR / "demo.sqlite"
-CONTENT_DB = Path(os.environ.get("ESTUDO_CONTENT_DB", PRIVATE_CONTENT_DB if PRIVATE_CONTENT_DB.is_file() else DEMO_CONTENT_DB)).resolve()
-STUDY_DB = Path(os.environ.get("ESTUDO_DB", str(DATA_DIR / "estudo.sqlite"))).resolve()
-DIST_ROOT = APP_ROOT / "dist"
-LOCAL_TZ = ZoneInfo("America/Sao_Paulo")
-PORT = int(os.environ.get("ESTUDO_PORT", "8765"))
-MAX_BODY = 22 * 1024 * 1024
-STEP_MINUTES = [10, 5, 20, 10, 15, 3]
+STEP_MINUTES = [step["minutes"] for step in STEPS]
 
 
 class ClosingConnection(sqlite3.Connection):
@@ -83,110 +74,7 @@ def content_db() -> sqlite3.Connection:
 
 def init_db() -> None:
     with study_db() as con:
-        version = con.execute('PRAGMA user_version').fetchone()[0]
-        if version > 1:
-            raise RuntimeError(f'Banco de progresso versão {version} é mais recente que esta aplicação.')
-        con.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS subjects (
-                subject_id TEXT PRIMARY KEY,
-                name TEXT NOT NULL COLLATE NOCASE UNIQUE,
-                created_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS topics (
-                topic_id TEXT PRIMARY KEY,
-                subject_id TEXT NOT NULL REFERENCES subjects(subject_id) ON DELETE CASCADE,
-                title TEXT NOT NULL,
-                position INTEGER NOT NULL DEFAULT 0,
-                created_at TEXT NOT NULL,
-                UNIQUE(subject_id, title)
-            );
-            CREATE TABLE IF NOT EXISTS lessons (
-                lesson_id TEXT PRIMARY KEY,
-                topic_id TEXT NOT NULL REFERENCES topics(topic_id) ON DELETE CASCADE,
-                title TEXT NOT NULL,
-                completed_at TEXT,
-                reference_scene TEXT,
-                created_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS lesson_questions (
-                lesson_id TEXT NOT NULL REFERENCES lessons(lesson_id) ON DELETE CASCADE,
-                occurrence_id TEXT NOT NULL,
-                position INTEGER NOT NULL DEFAULT 0,
-                PRIMARY KEY(lesson_id, occurrence_id)
-            );
-            CREATE TABLE IF NOT EXISTS materials (
-                material_id TEXT PRIMARY KEY,
-                lesson_id TEXT NOT NULL REFERENCES lessons(lesson_id) ON DELETE CASCADE,
-                title TEXT NOT NULL,
-                url TEXT,
-                document_id TEXT,
-                position INTEGER NOT NULL DEFAULT 0,
-                created_at TEXT NOT NULL,
-                CHECK ((url IS NOT NULL AND document_id IS NULL) OR
-                       (url IS NULL AND document_id IS NOT NULL))
-            );
-            CREATE TABLE IF NOT EXISTS study_sessions (
-                session_id TEXT PRIMARY KEY,
-                lesson_id TEXT NOT NULL REFERENCES lessons(lesson_id) ON DELETE CASCADE,
-                status TEXT NOT NULL CHECK(status IN ('active','completed')),
-                current_step INTEGER NOT NULL DEFAULT 0 CHECK(current_step BETWEEN 0 AND 5),
-                deadline_at TEXT,
-                paused_remaining INTEGER,
-                payload TEXT NOT NULL DEFAULT '{}',
-                started_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL,
-                completed_at TEXT
-            );
-            CREATE INDEX IF NOT EXISTS ix_sessions_status ON study_sessions(status, updated_at);
-            CREATE TABLE IF NOT EXISTS attempts (
-                attempt_id TEXT PRIMARY KEY,
-                session_id TEXT REFERENCES study_sessions(session_id) ON DELETE SET NULL,
-                stage TEXT NOT NULL,
-                occurrence_id TEXT NOT NULL,
-                answer TEXT NOT NULL,
-                help_used INTEGER NOT NULL DEFAULT 0,
-                reference_snapshot TEXT NOT NULL,
-                correct INTEGER,
-                created_at TEXT NOT NULL
-            );
-            CREATE INDEX IF NOT EXISTS ix_attempts_created ON attempts(created_at DESC);
-            CREATE TABLE IF NOT EXISTS cards (
-                card_id TEXT PRIMARY KEY,
-                topic_id TEXT NOT NULL REFERENCES topics(topic_id) ON DELETE CASCADE,
-                source_session_id TEXT REFERENCES study_sessions(session_id) ON DELETE SET NULL,
-                front TEXT NOT NULL,
-                back TEXT NOT NULL,
-                difficulty TEXT NOT NULL DEFAULT '',
-                interval_days INTEGER NOT NULL DEFAULT 1 CHECK(interval_days IN (1,3,7)),
-                due_date TEXT NOT NULL,
-                active INTEGER NOT NULL DEFAULT 1,
-                created_at TEXT NOT NULL
-            );
-            CREATE INDEX IF NOT EXISTS ix_cards_due ON cards(active, due_date);
-            CREATE TABLE IF NOT EXISTS card_reviews (
-                review_id TEXT PRIMARY KEY,
-                card_id TEXT NOT NULL REFERENCES cards(card_id) ON DELETE CASCADE,
-                rating TEXT NOT NULL CHECK(rating IN ('errei','dificil','facil')),
-                interval_before INTEGER NOT NULL,
-                interval_after INTEGER NOT NULL,
-                due_after TEXT NOT NULL,
-                reviewed_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS lesson_difficulties (
-                difficulty_id TEXT PRIMARY KEY,
-                lesson_id TEXT NOT NULL REFERENCES lessons(lesson_id) ON DELETE CASCADE,
-                session_id TEXT NOT NULL REFERENCES study_sessions(session_id) ON DELETE CASCADE,
-                text TEXT NOT NULL,
-                created_at TEXT NOT NULL
-            );
-            """
-        )
-        roadmap.init_schema(con)
-        question_links.init_schema(con)
-        con.execute('CREATE TABLE IF NOT EXISTS schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)')
-        con.execute('INSERT OR IGNORE INTO schema_migrations VALUES (?,?)', (1, iso(utc_now())))
-        con.execute('PRAGMA user_version = 1')
+        migrate(con)
 
 
 def row_dict(row: sqlite3.Row | None) -> dict | None:
@@ -494,7 +382,7 @@ def bootstrap() -> dict:
     totals = {"lessons": sum(len(t["lessons"]) for s in subjects for t in s["topics"]),
               "completed": sum(1 for s in subjects for t in s["topics"] for l in t["lessons"] if l["completed_at"])}
     available = profiles.list_profiles(STUDY_DB)
-    return {"subjects": subjects, "totals": totals, "active_session": active_session, "roadmap": plan,
+    return {"subjects": subjects, "totals": totals, "active_session": active_session, "roadmap": plan, "steps": STEPS,
             "profiles": available, "profile": next(p for p in available if p['id'] == profiles.current.get())}
 
 
@@ -864,7 +752,7 @@ class Handler(BaseHTTPRequestHandler):
             match = re.fullmatch(r"/api/sessions/([A-Za-z0-9_-]+)/step", path)
             if match:
                 step = body.get("step")
-                if not isinstance(step, int) or step < 0 or step > 5:
+                if not isinstance(step, int) or not 0 <= step < len(STEPS):
                     return self._error("Etapa inválida.")
                 with study_db() as con:
                     row = con.execute("SELECT * FROM study_sessions WHERE session_id=? AND status='active'", (match.group(1),)).fetchone()
