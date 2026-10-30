@@ -14,6 +14,16 @@ Acesse <http://127.0.0.1:8765>. O progresso fica no volume `estudo-dados`. O sis
 
 Para usar um catálogo privado no Docker, copie-o para o volume e reinicie o serviço: `docker compose cp caminho/conteudo.sqlite estudo:/app/sistema-estudo/dados/conteudo.sqlite` e `docker compose restart estudo`. A atualização do catálogo não altera o banco de progresso; conserve IDs de ocorrências para manter os vínculos existentes.
 
+O catálogo de demonstração contém apenas exercícios fictícios de aritmética e não inclui correspondências automáticas com as aulas do plano. Para vinculá-los manualmente, abra uma aula, escolha **Selecionar do catálogo** e salve a seleção. Questões livres não são vinculadas automaticamente às aulas.
+
+Para vincular questões compatíveis de um catálogo privado ao plano APOFP após copiá-lo e reiniciar o serviço, execute:
+
+```sh
+docker compose exec estudo python map_questions.py --apply
+```
+
+O comando cria um backup do progresso no volume e registra evidências para os vínculos gerados por regras temáticas; revise as correspondências na aula. Ele preserva vínculos manuais e o histórico, mas substitui vínculos gerados anteriormente que deixaram de corresponder. Execute novamente após atualizar o catálogo. Sem `--apply`, o comando apenas gera a auditoria em `dados/vinculacao/`. A vinculação automática aplica-se somente ao plano APOFP; para outros planos, selecione as questões na própria aula.
+
 Ao atualizar uma instalação antiga, preserve o volume de progresso e copie o catálogo privado para ele. Até isso ser feito, o catálogo fictício não contém as questões associadas ao progresso anterior.
 
 ## Execução local

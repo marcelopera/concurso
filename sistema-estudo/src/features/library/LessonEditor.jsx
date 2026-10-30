@@ -98,6 +98,7 @@ function LessonEditor({ lessonId, onBack, onStart, theme }) {
     </section>
     <section className="card editor-card"><div className="section-title"><h2>Questões vinculadas</h2><span className="muted">{selected.length} selecionadas</span></div>
       <p className="muted">Confira o enunciado, a evidência da correspondência e o estado do gabarito. Você pode acrescentar ou remover vínculos e salvar a seleção. Itens correlatos ajudam nos fundamentos e podem exigir adaptação ao contexto da aula.</p>
+      {lesson.occurrence_ids.length > lesson.questions.length && <Notice kind="error">{lesson.occurrence_ids.length - lesson.questions.length} vínculo(s) não estão no catálogo atual. Para recuperá-los, use o catálogo com os IDs originais.</Notice>}
       {lesson.questions.length ? <LinkedQuestionList questions={lesson.questions} selected={selected} onRemove={(id) => setSelected((ids) => ids.filter((item) => item !== id))} /> : <div className="empty compact"><strong>Nenhuma questão vinculada.</strong><span>O acervo ainda não tem correspondência confirmada para esta aula. Selecione itens do catálogo quando houver conteúdo pertinente.</span></div>}
       <div className="actions"><Button secondary onClick={() => setPicker(true)}>Selecionar do catálogo</Button><Button disabled={saving || JSON.stringify(selected) === JSON.stringify(lesson.occurrence_ids)} onClick={saveQuestions}>{saving ? "Salvando…" : "Salvar vínculos"}</Button></div>
     </section>
@@ -108,7 +109,7 @@ function LessonEditor({ lessonId, onBack, onStart, theme }) {
     <div className="actions bottom-actions"><Button secondary onClick={onBack}>Voltar ao tópico</Button><Button onClick={onStart}>Iniciar sessão</Button></div>
     {picker && <div className="modal-backdrop" role="presentation"><section className="modal picker-modal" role="dialog" aria-modal="true" aria-label="Selecionar questões">
       <div className="modal-heading"><div><h2>Selecionar questões</h2><p className="muted">Marque as ocorrências que pertencem a esta aula.</p></div><button className="icon-button" onClick={() => setPicker(false)} aria-label="Fechar">×</button></div>
-      <CatalogBrowser mode="select" selectedIds={selected} onToggle={(item) => setSelected((ids) => ids.includes(item.occurrence_id) ? ids.filter((id) => id !== item.occurrence_id) : [...ids, item.occurrence_id])} />
+      <CatalogBrowser mode="select" initialEligible={false} selectedIds={selected} onToggle={(item) => setSelected((ids) => ids.includes(item.occurrence_id) ? ids.filter((id) => id !== item.occurrence_id) : [...ids, item.occurrence_id])} />
       <div className="actions"><Button secondary onClick={() => setPicker(false)}>Cancelar</Button><Button disabled={saving} onClick={async () => { if (await saveQuestions()) setPicker(false); }}>Salvar seleção ({selected.length})</Button></div>
     </section></div>}
     {library && <LibraryPicker onClose={() => setLibrary(false)} onChoose={(item) => addMaterial({ title: item.nome || item.titulo || item.concurso || "PDF", document_id: item.documento_id })} />}
