@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import shutil
 import sqlite3
 import tempfile
 import threading
@@ -220,7 +221,7 @@ class ApiTests(unittest.TestCase):
     def test_catalog_rejects_future_broken_and_inconsistent_schemas(self):
         from estudo.db.connections import open_catalog
 
-        for case in ("future", "missing", "metadata"):
+        for case in ("future", "missing", "metadata", "metadata_missing", "source_hash", "execution_metadata"):
             destination = self.root / (case + ".sqlite")
             criar(destination)
             with closing(sqlite3.connect(destination)) as con, con:
@@ -229,9 +230,37 @@ class ApiTests(unittest.TestCase):
                 elif case == "missing":
                     con.execute("ALTER TABLE alternativas RENAME COLUMN rotulo TO broken")
                 else:
-                    con.execute("UPDATE schema_meta SET versao=2")
+                    if case == "metadata":
+                        con.execute("UPDATE schema_meta SET versao=1")
+                    elif case == "metadata_missing":
+                        con.execute("DROP TABLE schema_meta")
+                        con.execute("CREATE TABLE schema_meta(versao INTEGER NOT NULL)")
+                        con.execute("INSERT INTO schema_meta VALUES(2)")
+                    elif case == "source_hash":
+                        con.execute("UPDATE schema_meta SET hash_fontes=?", ("0" * 64,))
+                    else:
+                        con.execute("UPDATE execucoes SET metadados_json='{}'")
             with self.assertRaises(RuntimeError):
                 open_catalog(destination)
         with self.assertRaises(sqlite3.OperationalError):
             with open_catalog(server.settings.content_db) as con:
                 con.execute("DELETE FROM questoes")
+
+    def test_legacy_catalog_versions_open_read_only(self):
+        from estudo.db.connections import open_catalog
+
+        for version in (0, 1):
+            destination = self.root / f"legacy-v{version}.sqlite"
+            shutil.copyfile(server.settings.content_db, destination)
+            with closing(sqlite3.connect(destination)) as con, con:
+                con.execute("DROP TABLE schema_meta")
+                if version == 1:
+                    con.execute("CREATE TABLE schema_meta(versao INTEGER NOT NULL)")
+                    con.execute("INSERT INTO schema_meta VALUES(1)")
+                con.execute(f"PRAGMA user_version={version}")
+            before = destination.read_bytes()
+            with open_catalog(destination) as con:
+                self.assertEqual(con.execute("SELECT count(*) FROM questoes").fetchone()[0], 20)
+                with self.assertRaises(sqlite3.OperationalError):
+                    con.execute("DELETE FROM questoes")
+            self.assertEqual(destination.read_bytes(), before)
