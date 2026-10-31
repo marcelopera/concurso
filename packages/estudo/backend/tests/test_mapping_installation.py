@@ -26,6 +26,9 @@ class MappingInstallationTests(unittest.TestCase):
             catalog, study = root / "conteudo.sqlite", root / "estudo.sqlite"
             criar(catalog)
             with closing(sqlite3.connect(catalog)) as con, con:
+                execution_metadata = json.loads(con.execute("SELECT metadados_json FROM execucoes").fetchone()[0])
+                execution_metadata["origem"] = "teste privado"
+                con.execute("UPDATE execucoes SET metadados_json=?", (json.dumps(execution_metadata, sort_keys=True),))
                 con.execute("UPDATE schema_meta SET origem='teste privado'")
                 con.execute(
                     "UPDATE questoes SET enunciado_original='Calcule juros simples de uma aplicação.' WHERE questao_id IN ('q1', 'q2')"

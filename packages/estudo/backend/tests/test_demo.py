@@ -15,7 +15,7 @@ class DemoTests(unittest.TestCase):
             catalog = Path(tmp) / "catalog.sqlite"
             criar(catalog)
             with sqlite3.connect(catalog) as con:
-                self.assertEqual(con.execute("PRAGMA user_version").fetchone()[0], 1)
+                self.assertEqual(con.execute("PRAGMA user_version").fetchone()[0], 2)
                 self.assertEqual(con.execute("PRAGMA integrity_check").fetchone()[0], "ok")
                 self.assertEqual(con.execute("PRAGMA foreign_key_check").fetchall(), [])
             con.close()
