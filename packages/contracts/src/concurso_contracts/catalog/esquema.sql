@@ -1,5 +1,6 @@
 PRAGMA foreign_keys=ON;
 CREATE TABLE IF NOT EXISTS execucoes(execucao_id TEXT PRIMARY KEY,data_inicio TEXT,contrato_versao TEXT,metadados_json TEXT);
+CREATE TABLE IF NOT EXISTS schema_meta(versao INTEGER NOT NULL,execucao_id TEXT NOT NULL,origem TEXT NOT NULL,gerado_em TEXT NOT NULL,commit_origem TEXT NOT NULL,hash_fontes TEXT NOT NULL,fontes_json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS documentos(documento_id TEXT PRIMARY KEY,sha256 TEXT NOT NULL UNIQUE,tipo TEXT NOT NULL,banca TEXT,concurso TEXT,titulo TEXT,nome TEXT,arquivo_local TEXT NOT NULL,paginas INTEGER,url_fonte TEXT,metadados_json TEXT);
 CREATE TABLE IF NOT EXISTS provas(prova_id TEXT PRIMARY KEY,documento_id TEXT NOT NULL REFERENCES documentos(documento_id),banca TEXT,concurso TEXT,titulo TEXT,caderno TEXT,metadados_json TEXT);
 CREATE TABLE IF NOT EXISTS questoes(questao_id TEXT PRIMARY KEY,formato TEXT,enunciado_original TEXT NOT NULL,texto_para_busca TEXT,hash_texto TEXT NOT NULL,qualidade TEXT,registro_json TEXT NOT NULL);
