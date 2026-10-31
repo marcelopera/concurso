@@ -7,6 +7,10 @@
 venv/
 .pytest_cache/
 .ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+/artifacts/python-coverage/
 .qa-tools/
 .qa-results/
 *.log
@@ -28,12 +32,14 @@ venv/
 /sistema-estudo/dados/vinculacao/
 /sistema-estudo/dados/servidor.pid
 /sistema-estudo/dados/servidor.*.log
-/sistema-estudo/public/fonts/
+/packages/estudo/frontend/public/fonts/
 /sistema-estudo/tests/profiles-ui-*/
 /sistema-estudo/tests/tmp*/
-/sistema-estudo/test-results/
-/sistema-estudo/playwright-report/
+/packages/estudo/frontend/test-results/
+/packages/estudo/frontend/playwright-report/
 /backup-estudo/
+/data/
+**/build/
 
 # Imagens Docker exportadas e configuração local
 /*.tar

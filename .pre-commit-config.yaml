@@ -12,3 +12,11 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: frontend-format
+        name: Check frontend formatting
+        entry: pnpm --dir packages/estudo/frontend run format:check
+        language: system
+        files: ^packages/estudo/frontend/.*\.(m?js|jsx|css|json)$
+        pass_filenames: false

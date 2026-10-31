@@ -2,6 +2,15 @@
 
 ## Não lançado
 
+- Monorepo em pacotes instaláveis: pipeline, backend, frontend e contrato compartilhado, com planos externos e infraestrutura separados.
+- Instâncias explícitas da aplicação, SQL em repositórios e serviços independentes do adaptador HTTP; regressões de fronteiras e de dois servidores simultâneos.
+- CLI, Docker, CI e documentação adaptados; validação de wheels fora do checkout e preservação do volume de progresso.
+
+- Pipeline versionado com CLI por execução, extratores por banca, normalização comum, JSONL canônico e revisão explícita.
+- Geração de SQLite, CSV, HTML e relatório a partir do canônico, contratos de questões/tópicos/gabaritos e testes sintéticos das seis bancas.
+- Importação verificável dos lotes históricos, preservação dos IDs de ocorrência e roteiro de limpeza do histórico após o merge.
+- Decisões sobre dados e escopo registradas; unificação da execução local com o Makefile.
+
 - Adaptador HTTP com tabela de rotas e erros centralizados; serviços de catálogo, aulas e sessões e conexões separados.
 - Validação estrutural do catálogo, JSON Schema de questões e manifestos privados com SHA-256.
 - Planos externos com validação, backup e importação transacional que preserva progresso.

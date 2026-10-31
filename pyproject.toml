@@ -1,12 +1,13 @@
 [project]
 name = "concurso"
 version = "0.1.0"
-description = "Sistema local de estudo para concursos"
+description = "Workspace do sistema local de estudo para concursos"
 requires-python = ">=3.10"
-dependencies = ["tzdata>=2025.1; sys_platform == 'win32'"]
+dependencies = ["concurso-estudo==0.1.0", "concurso-pipeline==0.1.0"]
 
 [project.optional-dependencies]
-dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1"]
+dev = ["ruff==0.17.3", "jsonschema==4.26.0", "pip-audit==2.10.1", "coverage>=7.6,<8", "setuptools>=77", "wheel>=0.45"]
+extract = ["concurso-pipeline[extract]==0.1.0"]
 
 [build-system]
 requires = ["setuptools>=77"]
@@ -18,12 +19,12 @@ packages = []
 [tool.ruff]
 target-version = "py310"
 line-length = 120
-exclude = [".qa-tools", "node_modules", ".git"]
+src = [".", "packages/contracts/src", "packages/pipeline/src", "packages/estudo/backend/src"]
+exclude = [".qa-tools", "node_modules", ".git", ".venv", "build"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.ruff.lint.per-file-ignores]
-"sistema-estudo/tests/*.py" = ["E402"]
-"sistema-estudo/scripts/*.py" = ["E402"]
+"packages/estudo/backend/tests/*.py" = ["E402"]
 

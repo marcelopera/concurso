@@ -1,0 +1,23 @@
+[project]
+name = "concurso-pipeline"
+version = "0.1.0"
+description = "Extração, revisão e geração de catálogos de questões"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["concurso-contracts==0.1.0", "jsonschema==4.26.0"]
+
+[project.optional-dependencies]
+extract = ["pdfplumber>=0.11.0,<0.12", "pypdf>=6,<7"]
+
+[project.scripts]
+concurso-pipeline = "concurso_pipeline.__main__:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+concurso_pipeline = ["templates/*.html"]

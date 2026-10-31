@@ -1,27 +1,63 @@
-# Avaliação da issue #1
+# Pendências da issue #1
 
-Revisão do estado posterior aos PRs #2 e #8, com complementos deste PR. Esta página distingue correções do aplicativo de trabalho ainda necessário no pipeline e no histórico. A issue continua aberta.
+## Refatoração estrutural da seção 5
 
-| Item | Estado e evidência |
+A branch de refatoração parte da main com o PR #21 e preserva os simulados de provas completas. O código foi reorganizado em `packages/pipeline/`, `packages/estudo/backend/`, `packages/estudo/frontend/`, `plans/` e `deploy/`. Backend e pipeline têm distribuição, layout `src/` e testes próprios. `packages/contracts/` concentra os recursos compartilhados sem dependências entre aplicativo e pipeline.
+
+HTTP adapta o transporte, serviços executam os casos de uso e repositórios contêm SQL. Cada servidor recebe sua própria instância `Application`; não há composição por `sys.modules`. Há verificações de dependências, regressão com dois servidores simultâneos e smoke de wheels fora do checkout. Makefile, CI, Docker, launcher e documentação usam a nova estrutura. Planos são montados em runtime e a imagem não os incorpora. A [ADR 0004](adr/0004-package-boundaries.md) documenta essas fronteiras.
+
+As seções seguintes preservam a avaliação histórica das operações externas. A refatoração não executa limpeza de histórico, publicação de dados, alteração das configurações do GitHub ou release, e não encerra automaticamente a issue.
+
+Referência: último comentário da issue, de 30/10/2026, após os PRs #2, #8 e #9. Esta avaliação distingue o que foi implementado neste PR das operações que o proprietário condicionou à aprovação e ao merge. A issue não deve ser encerrada automaticamente pelo PR.
+
+## 1. Decisões
+
+- Público apenas com código, documentação, planos redistribuíveis e fixtures sintéticas; dados de provas permanecem privados.
+- Pipeline neste repositório, em `concurso_pipeline/`.
+- JSONL revisado em `canonical/` como fonte da verdade; lotes originais preservados separadamente com SHA-256.
+- Produto local genérico com planos externos, preservando as limitações dos parsers históricos.
+- Reescrita autorizada para depois da aprovação e do merge. Backup no diretório irmão `concurso_codex`, escolhido pelo proprietário como substituição explícita ao pedido original de cópia fora da máquina.
+
+Evidência: [ADR 0002](adr/0002-public-code-private-data.md).
+
+## 2. Histórico e dados
+
+O importador copia e verifica lotes sem modificar o arquivo histórico. Na execução privada de validação, o catálogo foi reconstruído com contratos e integridade válidos. A proveniência ausente é marcada `legacy-unrecorded`; modelo, versão, prompt e data desconhecidos não são inventados.
+
+Ainda pendentes para depois do merge: backup espelho e snapshot privado no destino escolhido, verificação dos manifestos das cópias, reescrita/force-push, redução medida num clone completo novo e remoção de e-mails pessoais antigos. O [roteiro](history-cleanup.md) e o planejador de caminhos estão incluídos. O e-mail de novos commits locais já foi configurado como noreply; `package.json` declara MIT e autor.
+
+A preservação local não equivale ao armazenamento externo durável originalmente pedido na issue. Essa diferença está registrada como decisão do proprietário. Recuperar a proveniência real dos lotes antigos continua pendente.
+
+## 3. Pipeline
+
+| Requisito | Implementação e verificação |
 | --- | --- |
-| P0.1/P0.2 — clone limpo e caminhos | Catálogo fictício, biblioteca opcional, variáveis de ambiente e testes portáveis já existiam. A CI agora procura caminhos pessoais e inicia a imagem; o contexto Docker inclui as migrações SQL e o pnpm é instalado explicitamente, sem depender de Corepack na imagem Node. |
-| P0.3/P0.4 — dados e licença | A árvore atual contém código, plano e fixtures sintéticas com MIT e política de dados separada. Há ferramenta de manifesto com SHA-256 e proveniência, e atributos de dados gerados. A limpeza do histórico e o armazenamento externo dos lotes continuam pendentes. |
-| P1.1 — contratos e planos | A abertura do catálogo valida estrutura e versão, com compatibilidade legada. Há JSON Schema v1 de questões, validação na CI e importação transacional de planos externos. O teste de estabilidade de IDs após reconsolidação ainda depende do pipeline. |
-| P1.2 — backend | Configuração, conexões, migrações, serviços de catálogo/aulas/sessões e adaptador HTTP com tabela de rotas. Exceções/status centralizados; detalhes internos não chegam em 5xx. Etapas vêm do servidor; a porta efetiva substitui a mutação global. Os módulos de planos e mapeamento usam a migração central em vez de duplicar DDL. |
-| P1.3 — frontend | Telas por feature, Excalidraw sob demanda e versão exata já existiam. Agora há hook de persistência, componente de revisão separado, testes da fila de salvamento, ESLint e correções de hooks. O transform de fontes é documentado, validado no build e no E2E. TypeScript permanece uma alternativa futura. |
-| P1.4 — pipeline | Ainda fora da árvore pública, preservado em `concurso_codex`, diretório irmão. Não foi convertido em pacote, nem teve normalização unificada, CLI por execução ou testes por banca. O schema e o manifesto são infraestrutura; não substituem essa migração. |
-| P1.5 — testes | Fixtures temporárias e testes de API cobrem respostas, restrições de sessão, persistência, conclusão idempotente, SRS, contratos, backup e importação de planos. Cinco testes históricos específicos do catálogo privado permanecem opcionais. E2E configurado nos três sistemas operacionais; evidências são artefatos da CI. Mantido unittest para evitar uma migração de framework sem ganho de cobertura. |
-| P2.1 — qualidade | Ruff, ESLint, testes JS/Python, JSON Schema, links, caminhos e arquivos grandes na CI. Workflow de auditoria de dependências, CodeQL, Trivy e Gitleaks; Dependabot para pip e hooks pre-commit; CODEOWNERS e templates. Proteção de branch e recursos de segurança do GitHub dependem de configuração do repositório. |
-| P2.2/P2.3 — ambiente | `pyproject.toml`, `.python-version`, engines e pnpm fixos, bases Docker por digest e Compose endurecido. Makefile usa a suíte sintética e tem lint; comandos equivalentes sem Make estão documentados para Windows. |
-| P2.4 — documentação | Arquitetura, contrato, glossário e ADR presentes. Contagens privadas não são copiadas para o README. Descrição/topics do GitHub e documentação histórica do pipeline não são alteradas por este PR. |
-| P3.1 — robustez | Streaming por intervalos, CSP documentada e backup/restore já existiam; testes exercitam essas garantias. Erros internos têm mensagem genérica e a CI examina segredos nas alterações. |
+| Versionamento e dependências | Pacote instalado por `pyproject.toml`, grupo `extract` e wheel com schemas, SQL e template; Poppler documentado para renderização opcional. |
+| CLI e registry | `python -m concurso_pipeline`, `--run-id` obrigatório, caminhos configuráveis e registry para as seis bancas; sem data de execução fixa nos módulos. |
+| Normalização e IO | `common` concentra `norm` (NFKC + casefold), `clean`, `readjl`, `expected_count` e identidade histórica. Transcrições preservam caixa original. |
+| Revisão | Estágio `review` aplica correções e enriquecimentos; `--repair-ce` incorpora a reconstrução geométrica. Correções manuais específicas ficam nos dados privados. |
+| Testes golden | PDFs sintéticos originais para Cebraspe, Fundatec, FCC, ESAF, Vunesp e FGV, extraídos e consolidados contra resultados esperados. |
+| Idempotência e IDs | Comparação de todos os derivados byte a byte entre dois builds; reconsolidação com texto corrigido preserva os IDs de ocorrência e o algoritmo anterior. |
+| Contratos | Questões, tópicos e gabaritos validados por JSON Schema; fontes verificadas; catálogo com `schema_meta`, `user_version`, FKs e índices de busca. |
+| Portabilidade | Manifesto e dados com caminhos relativos à biblioteca; teste executa a CLI em outro diretório, sem PDFs para o build canônico. |
+| Derivados e documentação | SQLite/CSV/HTML/filas/relatórios fora do Git; template próprio; `report` gera log por execução a partir de `relatorio.json`; [guia](pipeline.md), [execução sintética](runs/pipeline-sintetico.md) e [ADR histórica](adr/0003-content-and-recommendation.md). |
 
-Para concluir integralmente a issue ainda é necessário:
+Os parsers de edital preservados ainda têm regras específicas dos concursos originais. Os testes sintéticos não demonstram extração correta de todo novo formato nem substituem revisão semântica de conteúdo real. O downloader opcional não foi adicionado: a biblioteca continua opcional ao aplicativo.
 
-- Preparar backup espelho, definir o plano de reescrita e executar a limpeza do histórico com coordenação de clones e branches; este PR não faz force-push.
-- Recuperar a proveniência real dos lotes antigos, escolher armazenamento privado durável e verificar os manifestos antes de qualquer distribuição.
-- Migrar o pipeline preservado para um pacote portátil: normalização e IO comuns, CLI com run ID, extratores por banca, template separado e testes sintéticos de regressão/idempotência/IDs. Os scripts privados atuais não são apresentados como reproduzíveis.
-- Validar os outros registros do contrato histórico (tópicos e gabaritos) com schemas e fixtures ao migrar o pipeline.
-- Configurar proteção da main e metadados do repositório, decidir a primeira release e confirmar a política para dados históricos. Uma release de catálogo privado não deve ser publicada como efeito colateral de um PR de código.
+## 4. Qualidade de baixa prioridade
 
-As validações locais e o resultado dos workflows deste PR ficam na descrição do PR. Docker e E2E em Linux/macOS são verificados pela CI; o ambiente local desta alteração é Windows.
+README e Makefile usam `inicializar.py` e `python -m estudo`. unittest foi mantido. Migração para pytest/TypeScript, testes de componentes com Vitest/Testing Library, Prettier, limiar numérico de cobertura e supressão dos avisos `use client` permanecem melhorias posteriores. Conforme o comentário da issue, esta seção não bloqueia seu encerramento.
+
+## 5. GitHub
+
+Aplicado e conferido por API em 30/10/2026: proteção da `main` com PR obrigatório, checks estritos de CI e Security, admins sujeitos à regra, exclusão e force-push bloqueados; secret scanning, push protection e private vulnerability reporting ativados; descrição e topics preenchidos.
+
+Checks exigidos: `test (ubuntu-latest)`, `test (windows-latest)`, `test (macos-latest)`, `dependencies`, `codeql (python)`, `codeql (javascript-typescript)`, `image`, `secrets`. Não se exige aprovação formal de outro colaborador em um repositório pessoal; o parecer Astra é entregue ao proprietário.
+
+A primeira release `v0.1.0` fica para o commit com histórico limpo. Publicar agora também criaria uma referência para o histórico que ainda contém os dados removidos da árvore.
+
+## 6. Conferência do PR #9
+
+Na main `a5d327f`, CI e Security passaram. `server.py` tem 192 linhas e compõe serviços; Vite está em devDependencies, Node tem engines e tzdata é declarado para Windows. Compose usa filesystem somente leitura, cap_drop ALL e no-new-privileges; há um único `.gitignore`. Os checks deste novo PR precisam passar novamente e seus links constam na descrição do PR.
+
+O encerramento completo depende das operações pós-merge da seção 2 e da release, além da proveniência que for recuperável. O PR entrega as correções de código e registra as exceções aprovadas sem apresentar essas etapas futuras como concluídas.

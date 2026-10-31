@@ -1,0 +1,131 @@
+{
+  "Cebraspe": {
+    "formato": "certo_errado",
+    "alternativas": []
+  },
+  "Fundatec": {
+    "formato": "multipla_escolha",
+    "alternativas": [
+      {
+        "rotulo": "A",
+        "texto": "Opcao A."
+      },
+      {
+        "rotulo": "B",
+        "texto": "Opcao B."
+      },
+      {
+        "rotulo": "C",
+        "texto": "Opcao C."
+      },
+      {
+        "rotulo": "D",
+        "texto": "Opcao D."
+      },
+      {
+        "rotulo": "E",
+        "texto": "Opcao E."
+      }
+    ]
+  },
+  "FCC": {
+    "formato": "multipla_escolha",
+    "alternativas": [
+      {
+        "rotulo": "A",
+        "texto": "Opcao A."
+      },
+      {
+        "rotulo": "B",
+        "texto": "Opcao B."
+      },
+      {
+        "rotulo": "C",
+        "texto": "Opcao C."
+      },
+      {
+        "rotulo": "D",
+        "texto": "Opcao D."
+      },
+      {
+        "rotulo": "E",
+        "texto": "Opcao E."
+      }
+    ]
+  },
+  "ESAF": {
+    "formato": "multipla_escolha",
+    "alternativas": [
+      {
+        "rotulo": "A",
+        "texto": "Opcao A."
+      },
+      {
+        "rotulo": "B",
+        "texto": "Opcao B."
+      },
+      {
+        "rotulo": "C",
+        "texto": "Opcao C."
+      },
+      {
+        "rotulo": "D",
+        "texto": "Opcao D."
+      },
+      {
+        "rotulo": "E",
+        "texto": "Opcao E."
+      }
+    ]
+  },
+  "Vunesp": {
+    "formato": "multipla_escolha",
+    "alternativas": [
+      {
+        "rotulo": "A",
+        "texto": "Opcao A."
+      },
+      {
+        "rotulo": "B",
+        "texto": "Opcao B."
+      },
+      {
+        "rotulo": "C",
+        "texto": "Opcao C."
+      },
+      {
+        "rotulo": "D",
+        "texto": "Opcao D."
+      },
+      {
+        "rotulo": "E",
+        "texto": "Opcao E."
+      }
+    ]
+  },
+  "FGV": {
+    "formato": "multipla_escolha",
+    "alternativas": [
+      {
+        "rotulo": "A",
+        "texto": "Opcao A."
+      },
+      {
+        "rotulo": "B",
+        "texto": "Opcao B."
+      },
+      {
+        "rotulo": "C",
+        "texto": "Opcao C."
+      },
+      {
+        "rotulo": "D",
+        "texto": "Opcao D."
+      },
+      {
+        "rotulo": "E",
+        "texto": "Opcao E."
+      }
+    ]
+  }
+}

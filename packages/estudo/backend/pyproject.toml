@@ -1,0 +1,21 @@
+[project]
+name = "concurso-estudo"
+version = "0.1.0"
+description = "Servidor local de estudo, sessões e revisões espaçadas"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["concurso-contracts==0.1.0", "tzdata>=2025.1; sys_platform == 'win32'"]
+
+[project.scripts]
+estudo = "estudo.__main__:main"
+estudo-map-questions = "estudo.mapping.__main__:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"estudo.db.migrations" = ["*.sql"]

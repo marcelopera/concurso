@@ -1,0 +1,17 @@
+[project]
+name = "concurso-contracts"
+version = "0.1.0"
+description = "Contrato versionado do catálogo e fixtures sintéticas compartilhadas"
+requires-python = ">=3.10"
+license = "MIT"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"concurso_contracts.catalog" = ["*.sql"]
+"concurso_contracts.schemas" = ["*.json"]
