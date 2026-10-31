@@ -48,6 +48,8 @@ jobs:
           if-no-files-found: ignore
       - run: pnpm run lint
         working-directory: packages/estudo/frontend
+      - run: pnpm run format:check
+        working-directory: packages/estudo/frontend
       - run: pnpm test
         working-directory: packages/estudo/frontend
       - run: pnpm run build
