@@ -1,11 +1,14 @@
 """Create a synthetic, redistributable catalog for a fresh installation."""
 
 import hashlib
+import json
 import os
 import sqlite3
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
+
+from .contrato import CATALOG_VERSION, current_commit, hash_sources, serialize_sources
 
 
 def criar(destino: Path) -> None:
@@ -19,18 +22,40 @@ def criar(destino: Path) -> None:
     try:
         with closing(sqlite3.connect(destino)) as con, con:
             con.executescript((Path(__file__).parent / "esquema.sql").read_text(encoding="utf-8"))
+            sources = {
+                "criar_demo.py": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "esquema.sql": hashlib.sha256((Path(__file__).parent / "esquema.sql").read_bytes()).hexdigest(),
+            }
+            source_hash = hash_sources(sources)
+            generated_at = datetime.now(timezone.utc).isoformat(timespec="microseconds")
+            commit = current_commit(Path(__file__))
+            execution_metadata = {
+                "execucao_id": "demo-sintetico",
+                "origem": "demonstracao sintetica",
+                "proveniencia": "sintetica",
+                "gerado_em": generated_at,
+                "commit_execucao": commit,
+                "commit_origem": commit,
+                "hash_fontes": source_hash,
+                "fontes": sources,
+            }
             con.execute(
-                "CREATE TABLE schema_meta (versao INTEGER NOT NULL, origem TEXT NOT NULL, "
-                "gerado_em TEXT NOT NULL, commit_origem TEXT, hash_fontes TEXT NOT NULL)"
+                "INSERT INTO schema_meta VALUES (?,?,?,?,?,?,?)",
+                (
+                    CATALOG_VERSION,
+                    execution_metadata["execucao_id"],
+                    execution_metadata["origem"],
+                    generated_at,
+                    commit,
+                    source_hash,
+                    serialize_sources(sources),
+                ),
             )
-            source_hash = hashlib.sha256(
-                Path(__file__).read_bytes() + (Path(__file__).parent / "esquema.sql").read_bytes()
-            ).hexdigest()
             con.execute(
-                "INSERT INTO schema_meta VALUES (1, 'demonstracao sintetica', ?, NULL, ?)",
-                (datetime.now(timezone.utc).isoformat(), source_hash),
+                "INSERT INTO execucoes VALUES(?,?,?,?)",
+                ("demo-sintetico", generated_at, f"v{CATALOG_VERSION}", json.dumps(execution_metadata, sort_keys=True)),
             )
-            con.execute("PRAGMA user_version=1")
+            con.execute(f"PRAGMA user_version={CATALOG_VERSION}")
             for n in range(1, 21):
                 doc, prova, questao, ocorrencia, gab = (f"{p}{n}" for p in ("doc", "p", "q", "o", "g"))
                 banco = "Banca Exemplo A" if n <= 10 else "Banca Exemplo B"
