@@ -7,7 +7,7 @@ license = "MIT"
 dependencies = ["concurso-contracts==0.1.0", "jsonschema==4.26.0"]
 
 [project.optional-dependencies]
-extract = ["pdfplumber>=0.11.0,<0.12", "pypdf>=6,<7"]
+extract = ["pdfplumber>=0.11.0,<0.12", "pypdf>=6,<8"]
 
 [project.scripts]
 concurso-pipeline = "concurso_pipeline.__main__:main"
