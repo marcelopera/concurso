@@ -9,7 +9,7 @@ COPY packages/estudo/frontend/public ./public
 COPY packages/estudo/frontend/scripts/copy-excalidraw-fonts.mjs ./scripts/
 RUN pnpm run build
 
-FROM python:3.12-slim-bookworm@sha256:e697c81897302a4c4333bade000d98038fbb21eb064f8ee1fd42d02ebcd9d337
+FROM python:3.15-slim-bookworm@sha256:96599df822d0e1c6bb700014a05c7f3c8cabc6e0f7ff3c4f9f69cee033b4b5d9
 ENV PYTHONUNBUFFERED=1
 ENV ESTUDO_DATA_DIR=/app/data ESTUDO_DIST_DIR=/app/frontend
 WORKDIR /app
